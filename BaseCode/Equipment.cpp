@@ -1,8 +1,6 @@
-#include Equipment.h
-
-class Equipment
-{
-	Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size)
+#include "Equipment.h"
+#include <vector>
+	Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory)
 	{
 		HP = Hp;
 		Attack = Atk;
@@ -10,177 +8,137 @@ class Equipment
 		Speed = Spe;
 		Defence = Def;
 		Size = size;
+		isArmor = IsArmor;
+		isWeapon = IsWeapon;
+		isAccessory = IsAccessory;
+	}
+
+	Equipment::Equipment()
+	{
+		HP = 0;
+		Attack = 0;
+		Evasion = 0;
+		Speed = 0;
+		Defence = 0;
+		Size = 0;
 		isArmor = false;
 		isWeapon = false;
 		isAccessory = false;
 	}
 
-	~Equipment()
+	Equipment::~Equipment()
 	{
 
 	}
-
-	//array to hold level 1 equipment
-	Equipment[] EquipLv1 = new array();
-	//array to hold level 2 equipment
-	Equipment[] EquipLv2 = new array();
-	//array to hol level 3 equipment
-	Equipment[] EquipLv3 = new array();
-	//array to hol level 4 equipment
-	Equipment[] EquipLv4 = new array();
-	//array to hol level 5 equipment
-	Equipment[] EquipLv5 = new array();
-
-	//array to hold boss iterm
-	//first item is stalkers item
-	//second item is minotaurs item
-	//third item is Stone guardians item
-	//fourth item is Gargoyles item
-	//fifth item is Hornet Queen's item
-	//sixth item is Rad Dragon's item
-	Equipment[] BossItems = new Array();
 	
-	//weapons
-	Bow = new Equipment(0, 2, 0, 0, 0, 2);
-	Bow.isWeapon = true;
-	EquipLv1[].push(bow);
+	void Equipment::createItemArrays()
+	{
+		//weapons
+		Equipment* Bow = new Equipment(0, 2, 0, 0, 0, 2, false, true, false);
+		EquipLv1.push_back(Bow);
 
-	ShortSword = new Equipment(0, 2, 0, 0, 0, 1);
-	ShortSword.isWeapon = true;
-	equipmentLv1[].push(ShortSword);
+		Equipment* ShortSword = new Equipment(0, 2, 0, 0, 0, 1, false, true, false);
+		EquipLv1.push_back(ShortSword);
 
-	Axe = new Equipment(0, 5, 0, 0, 0, 1);
-	Axe.isWeapon = true;
-	EquipLv2[].push(Axe);
+		Equipment* Axe = new Equipment(0, 5, 0, 0, 0, 1, false, true, false);
+		EquipLv2.push_back(Axe);
 
-	Spear = new Equipment(0, 10, 0, 0, 0, 2);
-	Spear.isWeapon = true;
-	EquipLv3[].push(Spear);
+		Equipment* Spear = new Equipment(0, 10, 0, 0, 0, 2, false, true, false);
+		EquipLv3.push_back(Spear);
 
-	GreatSword = new Equipment(0, 15, 0, 0, 0, 2);
-	GreatSword.isWeapon = true;
-	EquipLv4[].push(GreatSword);
+		Equipment* GreatSword = new Equipment(0, 15, 0, 0, 0, 2, false, true, false);
+		EquipLv4.push_back(GreatSword);
 
-	Revolver = new Equipment(0, 20, 0, 0, 0, 1);
-	Revolver.isWeapon = true;
-	EquipLv5[].push(Revolver);
+		Equipment* Revolver = new Equipment(0, 20, 0, 0, 0, 1, false, true, false);
+		EquipLv5.push_back(Revolver);
 
-	WhiteSword = new Equipment(0, 10, 5, 0, 0, 1);
-	WhiteSword.isWeapon = true;
-	EquipLv3[].push(WhiteSword);
+		Equipment* WhiteSword = new Equipment(0, 10, 5, 0, 0, 1, false, true, false);
+		EquipLv3.push_back(WhiteSword);
 
-	Shield = new Equipment(0, 0, 0, 0, 1, 1);
-	Sheild.isWeapon = true;
-	EquipLv1[].push(Shield);
+		Equipment* Shield = new Equipment(0, 0, 0, 0, 1, 1, false, true, false);
+		EquipLv1.push_back(Shield);
 
-	SteelShield = new Equipment(0, 0, 0, 0, 1, 1);
-	SteelSheild.isWeapon = true;
-	EquipLv1[].push(SteelShield);
+		Equipment* SteelShield = new Equipment(0, 0, 0, 0, 1, 1, false, true, false);
+		EquipLv1.push_back(SteelShield);
 
-	BulwarkOfAges = new Equipment(0, 0, 0, 0, 5, 1);
-	BulwarkOfAges.isWeapon = true;
-	EquipLv5[].push(BulwarkOfAges);
+		Equipment* BulwarkOfAges = new Equipment(0, 0, 0, 0, 5, 1, false, true, false);
+		EquipLv5.push_back(BulwarkOfAges);
 
-	//armour
-	Leather = new Equipment(0, 0, 0, 1, 0, 1);
-	Leather.isArmor = true;
-	EquipLv1[].push(Leather);
+		//armour
+		Equipment* Leather = new Equipment(0, 0, 0, 1, 0, 1, true, false, false);
+		EquipLv1.push_back(Leather);
 
-	Chainmail = new Equipment(0, 0, 0, 2, 0, 1);
-	Chainmail.isArmor = true;
-	EquipLv2[].push(Chainmail);
+		Equipment* Chainmail = new Equipment(0, 0, 0, 2, 0, 1, true, false, false);
+		EquipLv2.push_back(Chainmail);
 
-	SteelArmour = new Equipment(0, 0, 0, 3, 0, 1);
-	SteelArmour.isArmor = true;
-	EquipLv3[].push(SteelArmour);
+		Equipment* SteelArmour = new Equipment(0, 0, 0, 3, 0, 1, true, false, false);
+		EquipLv3.push_back(SteelArmour);
 
-	PegasusBoots = new Equipment(0, 10, 0, 0, 0, 1);
-	PegsusBoots.isArmor = true;
-	EquipLv3[].push(PegasusBoots);
+		Equipment* PegasusBoots = new Equipment(0, 10, 0, 0, 0, 1, true, false, false);
+		EquipLv3.push_back(PegasusBoots);
 
-	BarbarianArmour = new Equipment(0, 0, 1, 3, 0, 1);
-	BarbarianArmous.isArmor = true;
-	EquipLv4[].push(BarbarianArmour);
+		Equipment* BarbarianArmour = new Equipment(0, 0, 1, 3, 0, 1, true, false, false);
+		EquipLv4.push_back(BarbarianArmour);
 
-	HeavyPlate = new Equipment(0, 0, 0, 8, 0, 2);
-	HeavyPlate.isArmor = true;
-	EquipLv5[].push(HeavyPlate);
+		Equipment* HeavyPlate = new Equipment(0, 0, 0, 8, 0, 2, true, false, false);
+		EquipLv5.push_back(HeavyPlate);
 
-	PaladinGloves = new Equipment(5, 0, 0, 0, 0, 1);
-	PaladinGloves.isArmor = true;
-	EquipLv5[].push(PaladinGloves);
+		Equipment* PaladinGloves = new Equipment(5, 0, 0, 0, 0, 1, true, false, false);
+		EquipLv5.push_back(PaladinGloves);
 
-	SpartanHelmet = new Equipment(0, 0, 3, 2, 0, 1);
-	SpartanHelmet.isArmor = true;
-	EquipLv5[].push(SpartanHelmet);
+		Equipment* SpartanHelmet = new Equipment(0, 0, 3, 2, 0, 1, true, false, false);
+		EquipLv5.push_back(SpartanHelmet);
 
-	//Accesories
-	GhostRing = new Equipment(0, 0, 0, 0, 0, 1);
-	GhostRing.isAccessory = true;
-	EquipLv5[].push(GhostRing);
+		//Accesories
+		Equipment* GhostRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv5.push_back(GhostRing);
 
-	InvisRing = new Equipment(0, 0, 0, 0, 0, 1);
-	InvisRing.isAccessory = true;
-	EquipLv3[].push(InvisRing);
+		Equipment* InvisRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv3.push_back(InvisRing);
 
-	MonkeyGrip = new Equipment(0, 0, 0, 0, 0, 1);
-	MonkeyGrip.isAccessory = true;
-	EquipLv3.push(MonkeyGrip);
+		Equipment* MonkeyGrip = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv3.push_back(MonkeyGrip);
 
-	SilverRing = new Equipment(0, 0, 0, 0, 0, 1);
-	SilverRing.isAccessory = true;
-	EquipLv1[].push(SilverRing);
+		Equipment* SilverRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv1.push_back(SilverRing);
 
-	GoldRing = new Equipment(0, 0, 0, 0, 0, 1);
-	GoldRing.isAccessory = true;
-	EquipLv1[].push(GoldRing);
+		Equipment* GoldRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv1.push_back(GoldRing);
 
-	JewelRing = new Equipment(0, 0, 0, 0, 0, 1);
-	JewelRing.isAccessory = true;
-	EquipLv3[].push(JewelRing);
+		Equipment* JewelRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv3.push_back(JewelRing);
 
-	BlueBraclet = new Equipment(0, 9, 0, 0, 0, 1);
-	BlueBraclet.isAccessory = true;
-	EquipLv4[].push(BlueBraclet);
+		Equipment* BlueBraclet = new Equipment(0, 9, 0, 0, 0, 1, false, false, true);
+		EquipLv4.push_back(BlueBraclet);
 
-	RBraclet = new Equipment(0, 2, 0, 0, 0, 1);
-	RBraclet.isAccessory = true;
-	EquipLv1[].push(RBraclet);
+		Equipment* RBraclet = new Equipment(0, 2, 0, 0, 0, 1, false, false, true);
+		EquipLv1.push_back(RBraclet);
 
-	SilverBracelet = new Equipment(0, 0, 0, 0, 0, 1);
-	SilverBracelet.isAccessory = true;
-	EquipLv1[].push(SilverBracelet);
+		Equipment* SilverBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv1.push_back(SilverBracelet);
 
-	GoldBracelet = new Equipment(0, 0, 0, 0, 0, 1);
-	GoldBracelet.isAccessory = true;
-	EquipLv1[].push(GoldBracelet);
+		Equipment* GoldBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv1.push_back(GoldBracelet);
 
-	JewelBracelet = new Equipment(0, 0, 0, 0, 0, 1);
-	JewelBracelet.isAccessory = true;
-	EquipLv3[].push(JewelBracelet);
+		Equipment* JewelBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+		EquipLv3.push_back(JewelBracelet);
 
-	//boss items
-	StalkersScythe = new Equipment(0, 0, 66, 1, 0, 2);
-	StalkersScythe.isWeapon = true;
-	BossItems[].push(StalkersScythe);
+		//boss items
+		Equipment* StalkersScythe = new Equipment(0, 0, 66, 1, 0, 2, false, true, false);
+		BossItems.push_back(StalkersScythe);
 
-	GreatAxe = new Equipment(0, 0, 15, 0, 0, 2);
-	GreatAxe.isWeapon = true;
-	BossItems[].push(GreatAxe);
-	
-	MaceOfAges = new Equipment(0, 0, 15, 0, 5, 2);
-	MaceOfAges.isWeapon = true;
-	BossItems[].push(MaceOfAges);
+		Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, false, true, false);
+		BossItems.push_back(GreatAxe);
 
-	WingedPlateMail = new Equipment(0, 0, 0, 1, 10, 1);
-	WingedPlaceMail.isArmor = true;
-	BossItems[].push(WingedPlateMail);
+		Equipment* MaceOfAges = new Equipment(0, 0, 15, 0, 5, 2, false, true, false);
+		BossItems.push_back(MaceOfAges);
 
-	DaggerOfDeception = new Equipment(0, 0, 15, 1, 5, 1);
-	DaggerOfDeception.isWeapon = true;
-	BossItems[].push(DaggerOfDeception);
+		Equipment* WingedPlateMail = new Equipment(0, 0, 0, 1, 10, 1, true, false, false);
+		BossItems.push_back(WingedPlateMail);
 
-	KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0);
-	KeyOfVictory.isAccessory = true;
-	BossItems[].push(KeyOfVictory);
-};
+		Equipment* DaggerOfDeception = new Equipment(0, 0, 15, 1, 5, 1, false, true, false);
+		BossItems.push_back(DaggerOfDeception);
+
+		Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true);
+		BossItems.push_back(KeyOfVictory);
+	}
