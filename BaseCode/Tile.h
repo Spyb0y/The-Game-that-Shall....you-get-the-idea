@@ -15,8 +15,10 @@ public:
 
 	}
 
+	virtual void MoveRight(float amt);
 
-	XMFLOAT2 DrawTile(FXMVECTOR pos);
+
+//	XMFLOAT2 DrawTile(FXMVECTOR pos);
 
 
 };

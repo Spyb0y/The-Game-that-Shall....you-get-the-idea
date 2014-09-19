@@ -1,7 +1,8 @@
 #include "Tile.h"
 
-/*XMFLOAT2 Tile::DrawTile(FXMVECTOR pos)
+
+void Tile::MoveRight(float amt)
 {
+	mPos.x += 100;
 
 }
-*/
