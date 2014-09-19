@@ -118,7 +118,10 @@ private:
 		gs_PLAYERMOVE,
 		gs_BATTLEPHASE,
 		gs_LOOTPHASE,
-		gs_ENEMYPHASE
+		gs_ENEMYPHASE,
+		gs_GAMEOVER,
+		gs_HANDMENU,
+		gs_MAINMENU
 	};
 	GameStates mCurrentGameState; 
 
@@ -509,12 +512,26 @@ void InClassProj::UpdateScene(float dt)
 
 		case gs_ENEMYPHASE:
 			break;
+
+		case gs_HANDMENU:
+			break;
+
+		case gs_MAINMENU:
+			break;
 	}
 	if (gs_START)
 	{
 		//place Home Tile
 		//Maybe show instructions
 		mCurrentGameState = gs_DRAWPHASE;
+	}
+
+	//Ignore MAINMENU for now as it isn't needed in the Prototype
+	if (gs_HANDMENU)
+	{
+		//all of the game menu code involving the hand and equpiment go here
+		//the return button will:
+		mCurrentGameState = gs_PLAYERMOVE;
 	}
 
 	if (gs_DRAWPHASE)
@@ -544,7 +561,11 @@ void InClassProj::UpdateScene(float dt)
 
 	if (gs_PLAYERMOVE)
 	{
+		//Check to see if the player pauses at any point, and if so:
+		mCurrentGameState = gs_HANDMENU;
+
 		//player move code
+
 		//encounter code
 		//check for encounter
 		//if no encounter then:
@@ -566,8 +587,10 @@ void InClassProj::UpdateScene(float dt)
 		//BATTLE CODE
 		//Check if Battle won, if true then:
 		mCurrentGameState = gs_LOOTPHASE;
-		//else the player lost or ran away in which case
+		//else the player ran away in which case
 		mCurrentGameState = gs_ENEMYPHASE;
+		//else check for Loss and if true:
+		mCurrentGameState = gs_GAMEOVER;
 	}
 
 	if (gs_LOOTPHASE)
@@ -593,6 +616,11 @@ void InClassProj::UpdateScene(float dt)
 		//Stalker Spawn, check, and move code
 
 		mCurrentGameState = gs_DRAWPHASE;
+	}
+
+	if (gs_GAMEOVER)
+	{
+		//end the game
 	}
 
 	XMVECTOR playerPos = mHero->GetPos();
