@@ -114,9 +114,11 @@ private:
 	{
 		gs_START,
 		gs_DRAWPHASE,
-		gs_PLAYERTURN
-
-
+		gs_TILEPLACEMENT,
+		gs_PLAYERMOVE,
+		gs_BATTLEPHASE,
+		gs_LOOTPHASE,
+		gs_ENEMYPHASE
 	};
 	GameStates mCurrentGameState; 
 
@@ -492,9 +494,27 @@ void InClassProj::UpdateScene(float dt)
 			
 			break;
 
-		case gs_PLAYERTURN:
+		case gs_TILEPLACEMENT:
 			
 			break;
+
+		case gs_PLAYERMOVE:
+			break;
+
+		case gs_BATTLEPHASE:
+			break;
+
+		case gs_LOOTPHASE:
+			break;
+
+		case gs_ENEMYPHASE:
+			break;
+	}
+	if (gs_START)
+	{
+		//place Home Tile
+		//Maybe show instructions
+		mCurrentGameState = gs_DRAWPHASE;
 	}
 
 	if (gs_DRAWPHASE)
@@ -512,7 +532,67 @@ void InClassProj::UpdateScene(float dt)
 		std::vector<Sprite::Frame*> frames;
 		frames.push_back(newTileFrame);
 
-		mCurrentGameState = gs_PLAYERTURN;
+		mCurrentGameState = gs_TILEPLACEMENT;
+	}
+
+	if (gs_TILEPLACEMENT)
+	{
+		//Tile move and placement code
+
+		mCurrentGameState = gs_PLAYERMOVE;
+	}
+
+	if (gs_PLAYERMOVE)
+	{
+		//player move code
+		//encounter code
+		//check for encounter
+		//if no encounter then:
+
+		mCurrentGameState = gs_ENEMYPHASE;
+
+		//if ecounter then:
+		mCurrentGameState = gs_BATTLEPHASE;
+	}
+
+	if (gs_BATTLEPHASE)
+	{
+		//Check if Tile Explored
+		//if explored then check for chance of a monster
+			//if monster check passes then check the level and terrain of the tile entered
+		//if unexplored:
+		//Check level and terrain of tile entered
+		//monster chooser and spawn code
+		//BATTLE CODE
+		//Check if Battle won, if true then:
+		mCurrentGameState = gs_LOOTPHASE;
+		//else the player lost or ran away in which case
+		mCurrentGameState = gs_ENEMYPHASE;
+	}
+
+	if (gs_LOOTPHASE)
+	{
+		//Check level of defeated enemy
+		//Check if enemy was boss
+		//If Boss: Give Player the Boss Item
+		//If no Boss: Spawn items according to Level of enemy
+
+		//Move Player Sprite into new Tile
+
+		//Check if Player still has moves left
+		//if yes then
+		mCurrentGameState = gs_PLAYERMOVE;
+
+		//if not then:
+		mCurrentGameState = gs_ENEMYPHASE;
+	}
+
+	if (gs_ENEMYPHASE)
+	{
+	
+		//Stalker Spawn, check, and move code
+
+		mCurrentGameState = gs_DRAWPHASE;
 	}
 
 	XMVECTOR playerPos = mHero->GetPos();
