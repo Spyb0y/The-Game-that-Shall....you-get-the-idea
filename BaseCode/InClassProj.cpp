@@ -113,7 +113,7 @@ private:
 	ID3D11DepthStencilState* mNoDepthDS;
 	ID3D11DepthStencilState* mFontDS;
 
-	enum GameStates 
+	/*enum GameStates 
 	{
 		gs_START,
 		gs_DRAWPHASE,
@@ -126,7 +126,7 @@ private:
 		gs_HANDMENU,
 		gs_MAINMENU
 	};
-	GameStates mCurrentGameState; 
+	GameStates mCurrentGameState; */
 
 	enum TileFrames
 	{
@@ -161,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 
 
 InClassProj::InClassProj(HINSTANCE hInstance)
-: D3DApp(hInstance), mLitTexEffect(0), mMouseReleased(true), mCam(0), mHero(0), mTestTerrain(0), mCurrentGameState(gs_START), StateMachine()
+: D3DApp(hInstance), mLitTexEffect(0), mMouseReleased(true), mCam(0), mHero(0), mTestTerrain(0), StateMachine()
 {
 	XMVECTOR pos = XMVectorSet(1.0f, 1.0f, 5.0f, 0.0f);
 	XMVECTOR look = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
@@ -387,7 +387,8 @@ bool InClassProj::Init()
 	mTileFrames.push_back(newTileFrame);
 
 //	mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
-	mHero = new Player(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
+//the following line uses Player as though it inherits from the Sprite class and will not work with Rhyse's new code
+//	mHero = new Player(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
 	//pos, scale, frameWidth, frameHeight, depth, frames, frameRate, device
 
 //	mTestSprite->Play(true);
