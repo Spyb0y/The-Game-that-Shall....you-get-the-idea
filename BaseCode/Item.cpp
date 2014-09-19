@@ -1,57 +1,54 @@
 #include "Item.h"
 
-class Item
-{
-public:
-	int heal = 0;
-	int dam = 0;
-	int eva = 0;
+int heal = 0;
+int dam = 0;
+int eva = 0;
 
-	Item(int Heal, int Dam, int Eva)
+	Item::Item(int Heal, int Dam, int Eva)
 	{
 		heal = Heal;
 		dam = Dam;
 		eva = Eva;
 	}
 
-	Item()
+	Item::Item()
 	{
 		heal = 0;
 		dam = 0;
 		eva = 0;
 	}
 
-	~Item()
+	Item::~Item()
 	{
 
 	}
 
-	public function useHealItem()
+	void Item::useHealItem()
 	{
 		player.hp += heal;
 		//remove potion
 	}
 
-	public function useDamItem()
+	void Item::useDamItem()
 	{
 		enemy.hp -= dam;
 		//remove damage item
 	}
 
-	public function maiden()
+	void Item::maiden()
 	{
 		player.maxHP += 5;
 		//remove maiden
 	}
 
-	public function useDodgeItem()
+	void Item::useDodgeItem()
 	{
 		player.eva += eva;
 		//remove flaggon of mead
 	}
 	//functions to create all the items
 		//potions of healing
-		public function makePotionSE()
+		void Item::makePotionSE()
 		{
 			new Item = potionSe;
 			evaPot.dam = 0;
@@ -59,7 +56,7 @@ public:
 			evaPot.eva = 0;
 		}
 	
-		public function makePotionME()
+		void Item::makePotionME()
 		{
 			new Item = potionMe;
 			evaPot.dam = 0;
@@ -67,7 +64,7 @@ public:
 			evaPot.eva = 0;
 		}
 
-		public function makePotionL()
+		void Item::makePotionL()
 		{
 			new Item = potionL;
 			evaPot.dam = 0;
@@ -75,7 +72,7 @@ public:
 			evaPot.eva = 0;
 		}
 
-		public function makePotionSP()
+		void Item::makePotionSP()
 		{
 			new Item = potionSP;
 			evaPot.dam = 0;
@@ -83,7 +80,7 @@ public:
 			evaPot.eva = 0;
 		}
 
-		public function makeBloodR()
+		void Item::makeBloodR()
 		{
 			new Item = bloodOfTheRighteous;
 			evaPot.dam = 0;
@@ -91,7 +88,7 @@ public:
 			evaPot.eva = 0;
 		}
 
-		public function makePotionUL()
+		void Item::makePotionUL()
 		{
 			new Item = potionUL;
 			evaPot.dam = 0;
@@ -99,7 +96,7 @@ public:
 			evaPot.eva = 0;
 		}
 		// damage items
-		public function makeFireball()
+		void Item::makeFireball()
 		{
 			new Item = fireball;
 			evaPot.dam = 5;
@@ -107,7 +104,7 @@ public:
 			evaPot.eva = 0;
 		}
 
-		public function makeBloodD()
+		void Item::makeBloodD()
 		{
 			new Item = BloodOTD;
 			evaPot.dam = 10;
@@ -116,7 +113,7 @@ public:
 		}
 
 		//other items
-		public function makeFlaggon
+		void Item::makeFlaggon()
 		{
 			new Item = Mead;
 			evaPot.dam = 0;
@@ -124,7 +121,7 @@ public:
 			evaPot.eva = 5;
 		}
 
-		public function makeMaiden()
+		void Item::makeMaiden()
 		{
 			new Item = maiden;	
 		}
