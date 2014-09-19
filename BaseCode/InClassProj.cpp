@@ -93,7 +93,7 @@ private:
 	//SkyBox* mSkyBox;
 	BasicModel* mBarnProjectile;
 	BasicModel* mFarmModel;
-	Sprite* mTestSprite;
+//	Sprite* mTestSprite;
 
 //	std::vector<Character*> mTestChars;
 
@@ -297,7 +297,7 @@ bool InClassProj::Init()
 	terrainInfo.layerMapFilename2 = L"Textures/lightdirt.dds";
 	terrainInfo.layerMapFilename3 = L"Textures/grass.dds";
 	terrainInfo.blendMapFilename = L"Textures/texMapHills.png";
-	terrainInfo.heightScale = 175.0f;
+	terrainInfo.heightScale = 1.0f;
 	terrainInfo.texTilesWide = 10.0f;
 	terrainInfo.texTilesHigh = 10.0f;
 
@@ -309,9 +309,6 @@ bool InClassProj::Init()
 	Vertex::InitParticleVertLayout(md3dDevice, mParticleEffect->GetTech());
 
 	//mSkyBox = new SkyBox(md3dDevice, 500.0f, L"Textures/sunsetcube1024.dds");
-
-	mBarnProjectile = new BasicModel(md3dDevice, mLitTexEffect, "Models/Wolf.obj",
-		false, true);
 //	BuildParticleVB();
 
 //	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/DarkParticle.png",
@@ -368,16 +365,11 @@ bool InClassProj::Init()
 	frames.push_back(newFrame);
 
 
-	mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
+//	mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
 	mHero = new Player(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
 	//pos, scale, frameWidth, frameHeight, depth, frames, frameRate, device
 
-	for (int i = 0; i < mTiles.size(); ++i)
-	{
-		mTiles[i] = new Tile(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);//DrawTile();
-	}
-
-	mTestSprite->Play(true);
+//	mTestSprite->Play(true);
 
 	//result = sys->playSound(sound1, 0, false, &channel);
 
@@ -475,6 +467,18 @@ void InClassProj::UpdateScene(float dt)
 	screenRect.bottom = mClientHeight;
 	//ClipCursor(&screenRect);
 
+	Tile::Frame* newTileFrame = new Tile::Frame();
+	ID3D11ShaderResourceView* tileImage;
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/TestTexture.png",
+		0, 0, &tileImage, 0);
+	newTileFrame->imageWidth = 1024;
+	newTileFrame->imageHeight = 1024;
+	newTileFrame->x = 0;
+	newTileFrame->y = 0;
+	newTileFrame->image = tileImage;
+
+	std::vector<Sprite::Frame*> frames;
+
 	XMVECTOR camPos = mCam->GetPos();
 
 	camPos = XMVectorSet(camPos.m128_f32[0], mTestTerrain->GetHeight(camPos.m128_f32[0],
@@ -490,139 +494,107 @@ void InClassProj::UpdateScene(float dt)
 	switch (mCurrentGameState)
 	{
 		case gs_START:
-
+			//place Home Tile
+			//Maybe show instructions
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Start Phase");
+			mCurrentGameState = gs_DRAWPHASE;
 			break;
 
 		case gs_DRAWPHASE:
-			
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Draw Phase");
+			for (int i = 0; i < mTiles.size(); ++i)
+			{
+				mTiles[i] = new Tile(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);//DrawTile();
+			}
+			frames.push_back(newTileFrame);
+
+			//mCurrentGameState = gs_TILEPLACEMENT;
+			mCurrentGameState = gs_START;
 			break;
 
 		case gs_TILEPLACEMENT:
-			
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Tile placement");
+			//Tile move and placement code
+
+			mCurrentGameState = gs_PLAYERMOVE;
 			break;
 
 		case gs_PLAYERMOVE:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Player Move Phase");
+			//Check to see if the player pauses at any point, and if so:
+			mCurrentGameState = gs_HANDMENU;
+
+			//player move code
+
+			//encounter code
+			//check for encounter
+			//if no encounter then:
+
+			mCurrentGameState = gs_ENEMYPHASE;
+
+			//if ecounter then:
+			mCurrentGameState = gs_BATTLEPHASE;
 			break;
 
 		case gs_BATTLEPHASE:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Battle Phase");
+			//Check if Tile Explored
+			//if explored then check for chance of a monster
+			//if monster check passes then check the level and terrain of the tile entered
+			//if unexplored:
+			//Check level and terrain of tile entered
+			//monster chooser and spawn code
+			//BATTLE CODE
+			//Check if Battle won, if true then:
+			mCurrentGameState = gs_LOOTPHASE;
+			//else the player ran away in which case
+			mCurrentGameState = gs_ENEMYPHASE;
+			//else check for Loss and if true:
+			mCurrentGameState = gs_GAMEOVER;
 			break;
 
 		case gs_LOOTPHASE:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Loot Phase");
+			//Check level of defeated enemy
+			//Check if enemy was boss
+			//If Boss: Give Player the Boss Item
+			//If no Boss: Spawn items according to Level of enemy
+
+			//Move Player Sprite into new Tile
+
+			//Check if Player still has moves left
+			//if yes then
+			mCurrentGameState = gs_PLAYERMOVE;
+
+			//if not then:
+			mCurrentGameState = gs_ENEMYPHASE;
 			break;
 
 		case gs_ENEMYPHASE:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Enemy Phase");
+			//Stalker Spawn, check, and move code
+
+			mCurrentGameState = gs_DRAWPHASE;
 			break;
 
 		case gs_HANDMENU:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Hand Menu");
+			//all of the game menu code involving the hand and equpiment go here
+			//the return button will:
+
+			mCurrentGameState = gs_PLAYERMOVE;
 			break;
 
 		case gs_MAINMENU:
+			//Ignore MAINMENU for now as it isn't needed in the Prototype
+			break;
+
+		case gs_GAMEOVER:
+			mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Game Over");
+			//end the game
 			break;
 	}
-	if (gs_START)
-	{
-		//place Home Tile
-		//Maybe show instructions
-		mCurrentGameState = gs_DRAWPHASE;
-	}
-
-	//Ignore MAINMENU for now as it isn't needed in the Prototype
-	if (gs_HANDMENU)
-	{
-		//all of the game menu code involving the hand and equpiment go here
-		//the return button will:
-		mCurrentGameState = gs_PLAYERMOVE;
-	}
-
-	if (gs_DRAWPHASE)
-	{
-		Tile::Frame* newTileFrame = new Tile::Frame();
-		ID3D11ShaderResourceView* tileImage;
-		D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/WalkAnim.png",
-			0, 0, &tileImage, 0);
-		newTileFrame->imageWidth = 2048;
-		newTileFrame->imageHeight = 512;
-		newTileFrame->x = 0;
-		newTileFrame->y = 0;
-		newTileFrame->image = tileImage;
-
-		std::vector<Sprite::Frame*> frames;
-		frames.push_back(newTileFrame);
-
-		mCurrentGameState = gs_TILEPLACEMENT;
-	}
-
-	if (gs_TILEPLACEMENT)
-	{
-		//Tile move and placement code
-
-		mCurrentGameState = gs_PLAYERMOVE;
-	}
-
-	if (gs_PLAYERMOVE)
-	{
-		//Check to see if the player pauses at any point, and if so:
-		mCurrentGameState = gs_HANDMENU;
-
-		//player move code
-
-		//encounter code
-		//check for encounter
-		//if no encounter then:
-
-		mCurrentGameState = gs_ENEMYPHASE;
-
-		//if ecounter then:
-		mCurrentGameState = gs_BATTLEPHASE;
-	}
-
-	if (gs_BATTLEPHASE)
-	{
-		//Check if Tile Explored
-		//if explored then check for chance of a monster
-			//if monster check passes then check the level and terrain of the tile entered
-		//if unexplored:
-		//Check level and terrain of tile entered
-		//monster chooser and spawn code
-		//BATTLE CODE
-		//Check if Battle won, if true then:
-		mCurrentGameState = gs_LOOTPHASE;
-		//else the player ran away in which case
-		mCurrentGameState = gs_ENEMYPHASE;
-		//else check for Loss and if true:
-		mCurrentGameState = gs_GAMEOVER;
-	}
-
-	if (gs_LOOTPHASE)
-	{
-		//Check level of defeated enemy
-		//Check if enemy was boss
-		//If Boss: Give Player the Boss Item
-		//If no Boss: Spawn items according to Level of enemy
-
-		//Move Player Sprite into new Tile
-
-		//Check if Player still has moves left
-		//if yes then
-		mCurrentGameState = gs_PLAYERMOVE;
-
-		//if not then:
-		mCurrentGameState = gs_ENEMYPHASE;
-	}
-
-	if (gs_ENEMYPHASE)
-	{
 	
-		//Stalker Spawn, check, and move code
-
-		mCurrentGameState = gs_DRAWPHASE;
-	}
-
-	if (gs_GAMEOVER)
-	{
-		//end the game
-	}
-
 	XMVECTOR playerPos = mHero->GetPos();
 	XMVECTOR toPlayer = playerPos - mCam->GetPos();
 	toPlayer = XMVector3Normalize(toPlayer);
@@ -638,7 +610,7 @@ void InClassProj::UpdateScene(float dt)
 
 //	UpdateParticleVB();
 
-	mTestSprite->Update(dt);
+//	mTestSprite->Update(dt);
 
 	//sys->update();
 }
@@ -702,11 +674,10 @@ void InClassProj::DrawScene()
 
 
 
-	mTestSprite->Draw(vp, md3dImmediateContext, mLitTexEffect);
+//	mTestSprite->Draw(vp, md3dImmediateContext, mLitTexEffect);
 	mHero->Draw(vp, md3dImmediateContext, mLitTexEffect);
 
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f),
-		50, 75, 10, "This is font");
+//	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "This is font");
 	md3dImmediateContext->OMSetDepthStencilState(0, 0);
 	//md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
@@ -772,7 +743,7 @@ void InClassProj::UpdateKeyboardInput(float dt)
 		}
 		else
 		{
-			
+			mHero->SetPos(FXMVECTOR());
 		}
 	}
 
