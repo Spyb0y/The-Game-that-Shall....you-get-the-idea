@@ -16,14 +16,13 @@ protected:
 	unsigned mMaxWeaponSlots;
 
 
-	//void GetEquipment(Equipment* newItem);
-	//void AddPlayerStats(Equipment* newItem);
-	//void DeletePlayerStats(Equipment* newItem);
+	void AddPlayerStats(Player* mHero, Equipment* newItem);
+	void DeletePlayerStats(Equipment* newItem);
 	
 public:
-	//std::vector<Equipment*> armourInventory;
-	//std::vector<Equipment*> weaponInventory;
-	//std::vector<Equipment*> accessoryInventory;
+	std::vector<Equipment*> armourInventory;
+	std::vector<Equipment*> weaponInventory;
+	std::vector<Equipment*> accessoryInventory;
 
 
 	Player();
@@ -36,6 +35,12 @@ public:
 
 	int GetPlayerHealth();
 	void SetPlayerHealth(int);
+	int GetPlayerEvade();
+
+	//test code
+	int GetPlayerAttack();
+
+	void GetEquipment(Player* mHero, Equipment* newItem);
 
 };
 

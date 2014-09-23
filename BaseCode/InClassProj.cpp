@@ -16,7 +16,7 @@
 #include "Cube.h"
 #include "GraphicalObject.h"
 #include "Projectile.h"
-#include "Effect.h"
+//#include "Effect.h"
 #include "FontRasterizer.h"
 #include "Terrain.h"
 #include "Player.h"
@@ -25,9 +25,16 @@
 #include "Tile.h"
 #include "State.h"
 #include "Enemy.h"
+#include "Equipment.h"
+#include "Inventory.h"
+//#include "PlayerInterface.h"
+#include <string>
+#include <sstream>
+#include <iostream>
 
 #include "xnacollision.h"
 //#include "fmod.hpp"
+using namespace std;
 
 struct TestParticle
 {
@@ -69,7 +76,7 @@ private:
 
 //	void DrawParticles();
 
-
+	
 private:
 
 	LitTexEffect* mLitTexEffect;
@@ -90,14 +97,15 @@ private:
 
 	Player* mHero;
 	Enemy* mTestEnemy;
+	Equipment* mTestItem;
+	Inventory* mInventory;
 	//Tile* mTile;
 
 	Terrain* mTestTerrain;
-//	Player* mHero;
 	//SkyBox* mSkyBox;
 	BasicModel* mBarnProjectile;
 	BasicModel* mFarmModel;
-//	Sprite* mTestSprite;
+    Sprite* mTestSprite;
 
 //	std::vector<Character*> mTestChars;
 
@@ -114,6 +122,10 @@ private:
 	ID3D11BlendState* mTransparentBS;
 	ID3D11DepthStencilState* mNoDepthDS;
 	ID3D11DepthStencilState* mFontDS;
+
+	Player* player;
+	float test;
+	//PlayerInterface* fuck;
 
 	/*enum GameStates 
 	{
@@ -221,7 +233,7 @@ InClassProj::~InClassProj()
 void InClassProj::BuildSceneLights()
 {
 	/* test code, test a point light out */
-	mPointLight.pos = XMFLOAT3(50.0f, 50.0f, 50.0f);
+/*	mPointLight.pos = XMFLOAT3(50.0f, 50.0f, 50.0f);
 	mPointLight.lightColour = XMFLOAT4(0.75f, 0.75f, 0.75f, 1.0f);
 	mPointLight.range = 1000.0f;
 	mPointLight.att = XMFLOAT3(0.0f, 0.02f, 0.0f);
@@ -237,7 +249,7 @@ void InClassProj::BuildSceneLights()
 	XMStoreFloat3(&mSpotLight.direction, temp);
 	mSpotLight.spot = 128.0f;
 
-	mAmbientColour = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	mAmbientColour = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);*/
 }
 
 /* FMOD_RESULT result;
@@ -288,15 +300,15 @@ bool InClassProj::Init()
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMVECTOR scale = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-	//mCam = new ThirdPersonCam(mHero, 8.0f, 3.0f, 3.0f);
+	//mCam = new ThirdPersonCam(mTestSprite, 8.0f, 3.0f, 3.0f);
 	//mCam->Update();
 
-	m2DCam = new BaseCamera(XMVectorSet(0.0f, 0.0f, -0.5f, 0.0f), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
+	m2DCam = new BaseCamera(XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 
 	m2DCam->Update();
 
-	BuildSceneLights();
+//	BuildSceneLights();
 
 	Terrain::InitInfo terrainInfo;
 	terrainInfo.cellHeight = 10.0f;
@@ -388,16 +400,20 @@ bool InClassProj::Init()
 //	frames.push_back(newFrame);
 	mTileFrames.push_back(newTileFrame);
 
-//	mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
+	//mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
 //the following line uses Player as though it inherits from the Sprite class and will not work with Rhyse's new code
 	mHero = new Player();//XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice
 	//pos, scale, frameWidth, frameHeight, depth, frames, frameRate, device
 
+	mInventory = new Inventory();
 	mTestEnemy = new Rat();
+	
+	//mTestItem->createItemArrays();
 
-//	mTestSprite->Play(true);
+	//mTestSprite->Play(true);
 
 	//result = sys->playSound(sound1, 0, false, &channel);
+	test = 700;
 
 	return true;
 }
@@ -496,31 +512,31 @@ void InClassProj::UpdateScene(float dt)
 
 	std::vector<Sprite::Frame*> frames;
 
-	XMVECTOR camPos = mCam->GetPos();
+	//XMVECTOR camPos = mCam->GetPos();
 
-	camPos = XMVectorSet(camPos.m128_f32[0], mTestTerrain->GetHeight(camPos.m128_f32[0],
-	camPos.m128_f32[2]) + 4.0f,
-	camPos.m128_f32[2], 1.0f);
+	//camPos = XMVectorSet(camPos.m128_f32[0], mTestTerrain->GetHeight(camPos.m128_f32[0],
+	//camPos.m128_f32[2]) + 4.0f,
+	//camPos.m128_f32[2], 1.0f);
 
-	mCam->SetPos(camPos);
+	//mCam->SetPos(camPos);
 //	mHero->AddForce(XMVectorSet(0.0f, -20.0f * dt, 0.0f, 0.0f));
 
-	mHero->Update(dt);
+//	mHero->Update(dt);
 //	mTiles->Update(dt);
 
 
-	//XMVECTOR playerPos = mHero->GetPos();
-	//XMVECTOR toPlayer = playerPos - mCam->GetPos();
-	//toPlayer = XMVector3Normalize(toPlayer);
-	//mCam->SetFacing(toPlayer, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	//mCam->SetPos(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	//mCam->SetFacing(XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
-	//mCam->Update();
+	/*XMVECTOR playerPos = mTestSprite->GetPos();
+	XMVECTOR toPlayer = playerPos - mCam->GetPos();
+	toPlayer = XMVector3Normalize(toPlayer);
+	mCam->SetFacing(toPlayer, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	mCam->SetPos(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	mCam->SetFacing(XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
+	mCam->Update();*/
 
 	m2DCam->Update();
 
-	XMStoreFloat3(&mSpotLight.pos, mCam->GetPos());
-	XMStoreFloat3(&mSpotLight.direction, mCam->GetLook());
+//	XMStoreFloat3(&mSpotLight.pos, mCam->GetPos());
+//	XMStoreFloat3(&mSpotLight.direction, mCam->GetLook());
 
 	mCurrState->Update(dt);
 //	UpdateParticleVB();
@@ -532,8 +548,8 @@ void InClassProj::UpdateScene(float dt)
 
 void InClassProj::DrawScene()
 {
-//	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView,
-//		reinterpret_cast<const float*>(&Colors::White));
+	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView,
+		reinterpret_cast<const float*>(&Colors::Blue));
 	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -541,10 +557,10 @@ void InClassProj::DrawScene()
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	XMVECTOR ambient = XMLoadFloat4(&mAmbientColour);
-	XMVECTOR eyePos = XMVectorSet(mCam->GetPos().m128_f32[0], mCam->GetPos().m128_f32[1],
+	/*XMVECTOR eyePos = XMVectorSet(mCam->GetPos().m128_f32[0], mCam->GetPos().m128_f32[1],
 		mCam->GetPos().m128_f32[2], 0.0f);
 
-	XMMATRIX proj = XMLoadFloat4x4(&m2DProj);
+	/*XMMATRIX proj = XMLoadFloat4x4(&m2DProj);
 	XMMATRIX view = mCam->GetView();
 
 	mLitTexEffect->SetPerFrameParams(ambient, eyePos, mPointLight, mSpotLight);
@@ -554,49 +570,40 @@ void InClassProj::DrawScene()
 
 	mTestTerrain->Draw(md3dImmediateContext, vp);
 
-//	XMMATRIX proj = XMLoadFloat4x4(&mProj);
-//	XMMATRIX view = mCam->GetView();
+	
+	XMMATRIX view = mCam->GetView();
 
 	mLitTexEffect->SetPerFrameParams(ambient, eyePos, mPointLight, mSpotLight);
-	mTestTerrain->GetEffect()->SetPerFrameParams(ambient, eyePos, mPointLight, mSpotLight);
+	mTestTerrain->GetEffect()->SetPerFrameParams(ambient, eyePos, mPointLight, mSpotLight);*/
 
-//	XMMATRIX vp = view * proj;
+	//XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	//XMMATRIX view = m2DCam->GetView();
+	//XMMATRIX vp = view * proj;
 
-	mTestTerrain->Draw(md3dImmediateContext, vp);
 
-	
 
-	vp = XMMatrixIdentity();
-	proj = XMLoadFloat4x4(&m2DProj);
-	view = m2DCam->GetView();
+	//mSkyBox->Draw(md3dImmediateContext, vp, mCam->GetPos());
+
+	//mTestTerrain->Draw(md3dImmediateContext, vp);
+
+	XMMATRIX vp = XMMatrixIdentity();
+	XMMATRIX proj = XMLoadFloat4x4(&m2DProj);
+	XMMATRIX view = m2DCam->GetView();
 
 	vp = vp * view * proj;
 
 	//mTestTerrain->Draw(md3dImmediateContext, vp);
-
-	md3dImmediateContext->IASetInputLayout(Vertex::GetNormalTexVertLayout());
-	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+	
+	std::stringstream ss;
+	ss << mHero->GetPlayerAttack();
+	string s = ss.str();
+		
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
 	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
-
-	vp = XMMatrixIdentity();
-	proj = XMLoadFloat4x4(&m2DProj);
-	view = m2DCam->GetView();
-
-	vp = vp * view * proj;
-
-
-
-//	mTestSprite->Draw(vp, md3dImmediateContext, mLitTexEffect);
-	//mHero->Draw(vp, md3dImmediateContext, mLitTexEffect);
-
-	mCurrState->Draw(vp, md3dImmediateContext, mLitTexEffect);
-
-//	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "This is font");
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, s);
 	md3dImmediateContext->OMSetDepthStencilState(0, 0);
-	//md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
+	md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	HR(mSwapChain->Present(1, 0));
 }
@@ -672,16 +679,18 @@ void InClassProj::UpdateKeyboardInput(float dt)
 		mHero->Attack(mTestEnemy);
 		if (mTestEnemy->GetEnemyHealth() <= 0)
 		{
-			delete mTestEnemy;
+			mTestItem = mInventory->SelectItem(0);
+			mHero->GetEquipment(mHero, mTestItem);
+			//delete mTestEnemy;
 		}
-		else
-		{
-			mTestEnemy->Attack(mHero);
-		}
-		if (mHero->GetPlayerHealth() <= 0)
-		{
-			delete mHero;
-		}
+		//else
+		//{
+		mTestEnemy->Attack(mHero);
+		//}
+		//if (mHero->GetPlayerHealth() <= 0)
+		//{
+		//	delete mHero;
+		//}
 	}
 
 
