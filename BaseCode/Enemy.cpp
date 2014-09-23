@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(float health, float damage, int level)
+Enemy::Enemy(float health, int damage, int level)
 {
 }
 
@@ -19,9 +19,30 @@ MIN_HIT(5)
 	mLevel = 2;
 }
 
-void ArmoredPhesant::Attack()
+void ArmoredPhesant::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int ArmoredPhesant::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void ArmoredPhesant::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Basilisk::Basilisk() :
@@ -33,9 +54,30 @@ MIN_HIT(5)
 	mLevel = 5;
 }
 
-void Basilisk::Attack()
+void Basilisk::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Basilisk::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Basilisk::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Crocodile::Crocodile() : 
@@ -47,9 +89,30 @@ MIN_HIT(6)
 	mLevel = 4;
 }
 
-void Crocodile::Attack()
+void Crocodile::Attack(Player* mHero)
 {
-	//do shit
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
+
+int Crocodile::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Crocodile::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 DeviousPenguin::DeviousPenguin() :
@@ -61,9 +124,30 @@ MIN_HIT(1)
 	mLevel = 4;
 }
 
-void DeviousPenguin::Attack()
+void DeviousPenguin::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int DeviousPenguin::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void DeviousPenguin::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Dragon::Dragon() :
@@ -75,9 +159,30 @@ MIN_HIT(6)
 	mLevel = 5;
 }
 
-void Dragon::Attack()
+void Dragon::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Dragon::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Dragon::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 //Boss
@@ -90,11 +195,31 @@ MIN_HIT(5)
 	mLevel = 4;
 }
 
-void HornetQueen::Attack()
+void HornetQueen::Attack(Player* mHero)
 {
-
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
 }
 
+int HornetQueen::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void HornetQueen::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
+}
 
 //Boss
 Gargoyle::Gargoyle() :
@@ -106,9 +231,30 @@ MIN_HIT(1)
 	mLevel = 3;
 }
 
-void Gargoyle::Attack()
+void Gargoyle::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Gargoyle::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Gargoyle::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 GiantBeetle::GiantBeetle() :
@@ -120,9 +266,30 @@ MIN_HIT(0)
 	mLevel = 1;
 }
 
-void GiantBeetle::Attack()
+void GiantBeetle::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int GiantBeetle::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void GiantBeetle::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 GiantEagle::GiantEagle() :
@@ -134,9 +301,30 @@ MIN_HIT(6)
 	mLevel = 4;
 }
 
-void GiantEagle::Attack()
+void GiantEagle::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int GiantEagle::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void GiantEagle::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 GiantRat::GiantRat() :
@@ -148,9 +336,30 @@ MIN_HIT(5)
 	mLevel = 2;
 }
 
-void GiantRat::Attack()
+void GiantRat::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int GiantRat::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void GiantRat::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 GiantWasp::GiantWasp() :
@@ -162,9 +371,30 @@ MIN_HIT(8)
 	mLevel = 2;
 }
 
-void GiantWasp::Attack()
+void GiantWasp::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int GiantWasp::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void GiantWasp::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Gorgon::Gorgon() :
@@ -176,9 +406,30 @@ MIN_HIT(4)
 	mLevel = 3;
 }
 
-void Gorgon::Attack()
+void Gorgon::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Gorgon::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Gorgon::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 //Boss
@@ -191,9 +442,30 @@ MIN_HIT(1)
 	mLevel = 1;
 }
 
-void Minotaur::Attack()
+void Minotaur::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Minotaur::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Minotaur::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Ogre::Ogre() :
@@ -205,9 +477,30 @@ MIN_HIT(6)
 	mLevel = 5;
 }
 
-void Ogre::Attack()
+void Ogre::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Ogre::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Ogre::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Pheasent::Pheasent() :
@@ -219,9 +512,30 @@ MIN_HIT(0)
 	mLevel = 1;
 }
 
-void Pheasent::Attack()
+void Pheasent::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Pheasent::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Pheasent::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 //Boss
@@ -234,9 +548,30 @@ MIN_HIT(10)
 	mLevel = 5;
 }
 
-void RadDragon::Attack()
+void RadDragon::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int RadDragon::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void RadDragon::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Rat::Rat() :
@@ -248,9 +583,30 @@ MIN_HIT(0)
 	mLevel = 1;
 }
 
-void Rat::Attack()
+void Rat::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Rat::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Rat::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 StoneGolem::StoneGolem() :
@@ -262,9 +618,30 @@ MIN_HIT(5)
 	mLevel = 3;
 }
 
-void StoneGolem::Attack()
+void StoneGolem::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int StoneGolem::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void StoneGolem::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 //Boss
@@ -277,9 +654,30 @@ MIN_HIT(1)
 	mLevel = 2;
 }
 
-void StoneGuardian::Attack()
+void StoneGuardian::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int StoneGuardian::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void StoneGuardian::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 TheKing’sRoyalGuard::TheKing’sRoyalGuard() :
@@ -291,9 +689,30 @@ MIN_HIT(3)
 	mLevel = 5;
 }
 
-void TheKing’sRoyalGuard::Attack()
+void TheKing’sRoyalGuard::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int TheKing’sRoyalGuard::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void TheKing’sRoyalGuard::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 TheStalker::TheStalker() :
@@ -304,9 +723,30 @@ MIN_HIT(30)
 	mDamage = 66;
 }
 
-void TheStalker::Attack()
+void TheStalker::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int TheStalker::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void TheStalker::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 Troll::Troll() :
@@ -318,9 +758,30 @@ MIN_HIT(5)
 	mLevel = 5;
 }
 
-void Troll::Attack()
+void Troll::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int Troll::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void Troll::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 WarHound::WarHound() :
@@ -332,9 +793,30 @@ MIN_HIT(8)
 	mLevel = 3;
 }
 
-void WarHound::Attack()
+void WarHound::Attack(Player* mHero)
 {
+	int hitValue;
+	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (hitValue > mHero->GetPlayerEvade())
+	{
+		int playerHealth = mHero->GetPlayerHealth();
+		playerHealth = playerHealth - mDamage;
+		mHero->SetPlayerHealth(playerHealth);
+	}
+	else
+	{
+		return;
+	}
+}
 
+int WarHound::GetEnemyHealth()
+{
+	return mHealth;
+}
+
+void WarHound::SetEnemyHealth(int EnemyHealth)
+{
+	mHealth = EnemyHealth;
 }
 
 
