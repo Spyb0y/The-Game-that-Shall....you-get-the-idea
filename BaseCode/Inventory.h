@@ -28,7 +28,7 @@ public:
 	//sixth item is Rad Dragon's item
 	std::vector<Equipment*> BossEquip;
 	void createItemVectors();
-	Equipment* SelectItem(int);
+	Equipment* SelectEquip(int);
 	//level 1 item vector
 	std::vector<Item*> ItemsLv1;
 	//level 2 item vector
@@ -39,5 +39,6 @@ public:
 	std::vector<Item*> ItemsLv4;
 	//level 5 item vector
 	std::vector<Item*> ItemsLv5;
+	Item* SelectItem(int);
 };
 
