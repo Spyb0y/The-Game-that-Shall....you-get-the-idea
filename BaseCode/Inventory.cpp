@@ -170,28 +170,28 @@ void Inventory::createItemVectors()
 	ItemsLv2.push_back(FireBall);
 
 	//Level 3 consumable Vector
-	Item* LPotion = new item(15, 0, 0);
+	Item* LPotion = new Item(15, 0, 0);
 	ItemsLv3.push_back(LPotion);
 
-	Item* Flaggon = new item(0, 0, 5);
+	Item* Flaggon = new Item(0, 0, 5);
 	ItemsLv3.push_back(Flaggon);
 
-	Item* Maiden = new item(0, 0, 0);
-	ItemLv3.push_back(Maiden);
+	Item* Maiden = new Item(0, 0, 0);
+	ItemsLv3.push_back(Maiden);
 	 
 	//Level 4 consumable Vector
-	Item* SPPotion = new item(30, 0, 0);
-	ItemLv4.push_back(SPPotion);
+	Item* SPPotion = new Item(30, 0, 0);
+	ItemsLv4.push_back(SPPotion);
 
 	Item* BloodR = new Item(35, 0, 0);
-	ItemLv4.push_back(BloodR);
+	ItemsLv4.push_back(BloodR);
 
 	//level 5 consumable Vector
 	Item* UPPotion = new Item(50, 0, 0);
-	ItemLv5.push_back(UPPotion);
+	ItemsLv5.push_back(UPPotion);
 
 	Item* BloodD = new Item(0, 10, 0);
-	ItemLv5.push_back(BloodD);
+	ItemsLv5.push_back(BloodD);
 }
 
 
