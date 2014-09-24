@@ -27,6 +27,7 @@
 #include "Enemy.h"
 #include "Equipment.h"
 #include "Inventory.h"
+#include "Item.h"
 //#include "PlayerInterface.h"
 #include <string>
 #include <sstream>
@@ -97,8 +98,9 @@ private:
 
 	Player* mHero;
 	Enemy* mTestEnemy;
-	Equipment* mTestItem;
+	Equipment* mTestEquip;
 	Inventory* mInventory;
+	Item* mTestItem;
 	//Tile* mTile;
 
 	Terrain* mTestTerrain;
@@ -408,7 +410,7 @@ bool InClassProj::Init()
 	mInventory = new Inventory();
 	mTestEnemy = new Basilisk();
 	
-	mInventory->createItemArrays();
+	mInventory->createItemVectors();
 
 	//mTestSprite->Play(true);
 
@@ -537,7 +539,7 @@ void InClassProj::UpdateScene(float dt)
 //	XMStoreFloat3(&mSpotLight.pos, mCam->GetPos());
 //	XMStoreFloat3(&mSpotLight.direction, mCam->GetLook());
 
-	mCurrState->Update(dt);
+	//mCurrState->Update(dt);
 //	UpdateParticleVB();
 
 //	mTestSprite->Update(dt);
@@ -666,11 +668,11 @@ void InClassProj::UpdateKeyboardInput(float dt)
 		}
 		else
 		{
-			for (int i = 0; i < mTiles.size(); ++i)
-			{
+			//for (int i = 0; i < mTiles.size(); ++i)
+			//{
 
-				mTiles[i]->MoveRight(100.0f);
-			}
+			//	mTiles[i]->MoveRight(100.0f);
+			//}
 		}
 	}
 	if (GetAsyncKeyState('A') & 0x8000)
@@ -679,8 +681,10 @@ void InClassProj::UpdateKeyboardInput(float dt)
 		if (mTestEnemy->GetEnemyHealth() <= 0)
 		{
 			int level = mTestEnemy->GetEnemyLevel();
+			mTestEquip = mInventory->SelectEquip(level);
 			mTestItem = mInventory->SelectItem(level);
-			mHero->GetEquipment(mHero, mTestItem);
+			mHero->GetEquipment(mHero, mTestEquip);
+			mHero->GetItem(mTestItem);
 			//delete mTestEnemy;
 		}
 		//else

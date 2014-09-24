@@ -64,7 +64,7 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 		if (armourInventory.size() + 1 > mMaxArmourSlots)
 		{
 			//ask player to remove an item
-			//DeletePlayerStats(mHero, armourInventory[0]);
+			DeletePlayerStats(mHero, armourInventory[armourInventory.size() - 1]);
 			delete armourInventory[armourInventory.size() - 1];
 		}
 	}
@@ -75,7 +75,7 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 		if (weaponInventory.size() + 1 > mMaxWeaponSlots)
 		{
 			//ask player to remove an item
-			//DeletePlayerStats(mHero, weaponInventory[0]);
+			DeletePlayerStats(mHero, weaponInventory[weaponInventory.size() - 1]);
 			delete weaponInventory[weaponInventory.size() - 1];
 		}
 	}
@@ -86,7 +86,7 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 		if (accessoryInventory.size() + 1 > mMaxAccessorySlots)
 		{
 			//ask player to remove an item
-			//DeletePlayerStats(mHero, accessoryInventory[0]);
+			DeletePlayerStats(mHero, accessoryInventory[accessoryInventory.size() - 1]);
 			delete accessoryInventory[accessoryInventory.size() - 1];
 		}
 	}

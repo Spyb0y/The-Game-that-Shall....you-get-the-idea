@@ -11,37 +11,71 @@ Inventory::~Inventory()
 }
 
 
-Equipment* Inventory::SelectItem(int i)
+Equipment* Inventory::SelectEquip(int i)
+{
+	if (i == 1)
+	{
+		int equip;
+		equip = rand() % EquipLv1.size();
+		return EquipLv1[equip];
+	}
+	if (i == 2)
+	{
+		int equip;
+		equip = rand() % EquipLv2.size();
+		return EquipLv2[equip];
+	}
+	if (i == 3)
+	{
+		int equip;
+		equip = rand() % EquipLv3.size();
+		return EquipLv3[equip];
+	}
+	if (i == 4)
+	{
+		int equip;
+		equip = rand() % EquipLv4.size();
+		return EquipLv4[equip];
+	}
+	if (i == 5)
+	{
+		int equip;
+		equip = rand() % EquipLv5.size();
+		return EquipLv5[equip];
+	}
+}
+
+Item* Inventory::SelectItem(int i)
 {
 	if (i == 1)
 	{
 		int item;
-		item = rand() % EquipLv1.size();
-		return EquipLv1[item];
+		item = rand() % ItemsLv1.size();
+		return ItemsLv1[item];
 	}
 	if (i == 2)
 	{
 		int item;
-		item = rand() % EquipLv2.size();
-		return EquipLv2[item];
+		item = rand() % ItemsLv2.size();
+		return ItemsLv2[item];
 	}
 	if (i == 3)
 	{
 		int item;
-		item = rand() % EquipLv3.size();
-		return EquipLv3[item];
+		item = rand() % ItemsLv3.size();
+		return ItemsLv3[item];
 	}
 	if (i == 4)
 	{
 		int item;
-		item = rand() % EquipLv4.size();
-		return EquipLv4[item];
+		item = rand() % ItemsLv4.size();
+		return ItemsLv4[item];
 	}
 	if (i == 5)
 	{
 		int item;
-		item = rand() % EquipLv5.size();
-		return EquipLv5[item];
+		item = rand() % ItemsLv5.size();
+		return ItemsLv5[item];
 	}
 }
 
