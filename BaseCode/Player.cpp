@@ -57,59 +57,67 @@ int Player::GetPlayerAttack()
 
 void Player::GetEquipment(Player* mHero, Equipment* newItem)
 {
-	if (newItem->isArmor)
+	if (newItem->isArmor == true)
 	{
 		armourInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		//if (armourInventory.size >= mMaxArmourSlots)
-		//{
+		if (armourInventory.size() + 1 > mMaxArmourSlots)
+		{
 			//ask player to remove an item
-		//	DeletePlayerStats(/*removeditem*/);
-		//	delete armourInventory[/*removeditem*/];
-		//}
+			//DeletePlayerStats(mHero, armourInventory[0]);
+			delete armourInventory[armourInventory.size() - 1];
+		}
 	}
-	if (newItem->isWeapon)
+	if (newItem->isWeapon == true)
 	{
 		weaponInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		//if (armourInventory.size >= mMaxAccessorySlots)
-		//{
+		if (weaponInventory.size() + 1 > mMaxWeaponSlots)
+		{
 			//ask player to remove an item
-		//	DeletePlayerStats(/*removeditem*/);
-		//	delete weaponInventory[/*removeditem*/];
-		//}
+			//DeletePlayerStats(mHero, weaponInventory[0]);
+			delete weaponInventory[weaponInventory.size() - 1];
+		}
 	}
-	if (newItem->isAccessory)
+	if (newItem->isAccessory == true)
 	{
 		accessoryInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		//if (armourInventory.size >= mMaxAccessorySlots)
-		//{
+		if (accessoryInventory.size() + 1 > mMaxAccessorySlots)
+		{
 			//ask player to remove an item
-		//	DeletePlayerStats(/*removeditem*/);
-		//	delete accessoryInventory[/*removeditem*/];
-		//}
+			//DeletePlayerStats(mHero, accessoryInventory[0]);
+			delete accessoryInventory[accessoryInventory.size() - 1];
+		}
+	}
+}
+
+void Player::GetItem(Item* newItem)
+{
+	playerHand.push_back(newItem);
+	if (playerHand.size() + 1 > 5)
+	{
+		//ask player to choose an item
+		delete playerHand[playerHand.size() - 1];
 	}
 }
 
 void Player::AddPlayerStats(Player* mHero, Equipment* newItem)
 {
-	//need player
-	//mHero->mSpeed = mPlayer.mSpeed + newItem->Speed;
-	//mPlayer.mHealth = mPlayer.mHealth + newItem->HP;
+	mHero->mSpeed = mHero->mSpeed + newItem->Speed;
+	mHero->mHealth = mHero->mHealth + newItem->HP;
 	mHero->mDamage = mHero->mDamage + newItem->Attack;
-	//mPlayer.mEvade = mPlayer.mEvade + newItem->Evasion;
-	//mPlayer.mDefense = mPlayer.mDefense + newItem->Defence;
+	mHero->mEvade = mHero->mEvade + newItem->Evasion;
+	mHero->mDefense = mHero->mDefense + newItem->Defence;
 }
 
-void Player::DeletePlayerStats(Equipment* newItem)
+void Player::DeletePlayerStats(Player* mHero, Equipment* newItem)
 {
-	//need player
-	//mPlayer.mSpeed = mPlayer.mSpeed - newItem->Speed;
-	//mPlayer.mHealth = mPlayer.mHealth - newItem->HP;
-	//mPlayer.mDamage = mPlayer.mDamage - newItem->Attack;
-	//mPlayer.mEvade = mPlayer.mEvade - newItem->Evasion;
-	//mPlayer.mDefense = mPlayer.mDefense - newItem->Defence;
+	mHero->mSpeed = mHero->mSpeed - newItem->Speed;
+	mHero->mHealth = mHero->mHealth - newItem->HP;
+	mHero->mDamage = mHero->mDamage - newItem->Attack;
+	mHero->mEvade = mHero->mEvade - newItem->Evasion;
+	mHero->mDefense = mHero->mDefense - newItem->Defence;
 }
 
 

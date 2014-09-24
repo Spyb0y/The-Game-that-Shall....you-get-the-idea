@@ -45,6 +45,11 @@ void ArmoredPhesant::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int ArmoredPhesant::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Basilisk::Basilisk() :
 MAX_HIT(15),
 MIN_HIT(5)
@@ -78,6 +83,11 @@ int Basilisk::GetEnemyHealth()
 void Basilisk::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int Basilisk::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 Crocodile::Crocodile() : 
@@ -115,6 +125,11 @@ void Crocodile::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int Crocodile::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 DeviousPenguin::DeviousPenguin() :
 MAX_HIT(2),
 MIN_HIT(1)
@@ -150,6 +165,11 @@ void DeviousPenguin::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int DeviousPenguin::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Dragon::Dragon() :
 MAX_HIT(30),
 MIN_HIT(6)
@@ -183,6 +203,11 @@ int Dragon::GetEnemyHealth()
 void Dragon::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int Dragon::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 //Boss
@@ -221,6 +246,11 @@ void HornetQueen::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int HornetQueen::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 //Boss
 Gargoyle::Gargoyle() :
 MAX_HIT(50),
@@ -247,6 +277,7 @@ void Gargoyle::Attack(Player* mHero)
 	}
 }
 
+
 int Gargoyle::GetEnemyHealth()
 {
 	return mHealth;
@@ -255,6 +286,11 @@ int Gargoyle::GetEnemyHealth()
 void Gargoyle::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int Gargoyle::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 GiantBeetle::GiantBeetle() :
@@ -292,6 +328,11 @@ void GiantBeetle::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int GiantBeetle::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 GiantEagle::GiantEagle() :
 MAX_HIT(20),
 MIN_HIT(6)
@@ -325,6 +366,11 @@ int GiantEagle::GetEnemyHealth()
 void GiantEagle::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int GiantEagle::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 GiantRat::GiantRat() :
@@ -362,6 +408,11 @@ void GiantRat::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int GiantRat::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 GiantWasp::GiantWasp() :
 MAX_HIT(25),
 MIN_HIT(8)
@@ -397,6 +448,11 @@ void GiantWasp::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int GiantWasp::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Gorgon::Gorgon() :
 MAX_HIT(40),
 MIN_HIT(4)
@@ -430,6 +486,11 @@ int Gorgon::GetEnemyHealth()
 void Gorgon::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int Gorgon::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 //Boss
@@ -468,6 +529,11 @@ void Minotaur::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int Minotaur::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Ogre::Ogre() :
 MAX_HIT(30),
 MIN_HIT(6)
@@ -503,6 +569,11 @@ void Ogre::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int Ogre::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Pheasent::Pheasent() :
 MAX_HIT(20),
 MIN_HIT(0)
@@ -536,6 +607,11 @@ int Pheasent::GetEnemyHealth()
 void Pheasent::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int Pheasent::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 //Boss
@@ -574,6 +650,11 @@ void RadDragon::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int RadDragon::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 Rat::Rat() :
 MAX_HIT(20),
 MIN_HIT(0)
@@ -609,6 +690,11 @@ void Rat::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int Rat::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 StoneGolem::StoneGolem() :
 MAX_HIT(15),
 MIN_HIT(5)
@@ -642,6 +728,11 @@ int StoneGolem::GetEnemyHealth()
 void StoneGolem::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int StoneGolem::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 //Boss
@@ -680,6 +771,11 @@ void StoneGuardian::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int StoneGuardian::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 TheKing’sRoyalGuard::TheKing’sRoyalGuard() :
 MAX_HIT(30),
 MIN_HIT(3)
@@ -713,6 +809,11 @@ int TheKing’sRoyalGuard::GetEnemyHealth()
 void TheKing’sRoyalGuard::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int TheKing’sRoyalGuard::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 TheStalker::TheStalker() :
@@ -784,6 +885,11 @@ void Troll::SetEnemyHealth(int EnemyHealth)
 	mHealth = EnemyHealth;
 }
 
+int Troll::GetEnemyLevel()
+{
+	return mLevel;
+}
+
 WarHound::WarHound() :
 MAX_HIT(20),
 MIN_HIT(8)
@@ -817,6 +923,11 @@ int WarHound::GetEnemyHealth()
 void WarHound::SetEnemyHealth(int EnemyHealth)
 {
 	mHealth = EnemyHealth;
+}
+
+int WarHound::GetEnemyLevel()
+{
+	return mLevel;
 }
 
 

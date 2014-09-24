@@ -10,6 +10,7 @@ public:
 	virtual void Attack(Player*){}
 	virtual int GetEnemyHealth(){return 0;}
 	virtual void SetEnemyHealth(int){};
+	virtual int GetEnemyLevel(){ return 0; }
 protected:
 	bool isDefeated;
 
@@ -23,6 +24,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 	void Guard();
 protected:
 	float mHealth;
@@ -42,6 +44,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -60,6 +63,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -78,6 +82,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -96,6 +101,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -115,6 +121,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -134,6 +141,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -152,6 +160,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -170,6 +179,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -188,6 +198,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 	void Bite();
 protected:
 	float mHealth;
@@ -207,6 +218,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 	void Sting();
 protected:
 	float mHealth;
@@ -225,6 +237,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -244,6 +257,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -262,6 +276,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -280,6 +295,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -298,6 +314,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -316,6 +333,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	int mDamage;
@@ -334,6 +352,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -353,6 +372,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -371,6 +391,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -407,6 +428,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 protected:
 	float mHealth;
 	float mDamage;
@@ -425,6 +447,7 @@ public:
 	void Attack(Player*);
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
+	int GetEnemyLevel();
 	void Bite();
 protected:
 	float mHealth;

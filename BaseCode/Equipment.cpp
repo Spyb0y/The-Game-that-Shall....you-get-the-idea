@@ -1,15 +1,15 @@
 #include "Equipment.h"
 #include <vector>
-	Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory)
+Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory)
 	{
 		HP = Hp;
-		Attack = Atk;
 		Evasion = Eva;
-		Speed = Spe;
+		Attack = Atk;
 		Defence = Def;
+		Speed = Spe;
 		Size = size;
-		isArmor = IsArmor;
 		isWeapon = IsWeapon;
+		isArmor = IsArmor;
 		isAccessory = IsAccessory;
 	}
 

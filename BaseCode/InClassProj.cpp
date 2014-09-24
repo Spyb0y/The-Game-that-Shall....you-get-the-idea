@@ -406,14 +406,13 @@ bool InClassProj::Init()
 	//pos, scale, frameWidth, frameHeight, depth, frames, frameRate, device
 
 	mInventory = new Inventory();
-	mTestEnemy = new Rat();
+	mTestEnemy = new Basilisk();
 	
-	//mTestItem->createItemArrays();
+	mInventory->createItemArrays();
 
 	//mTestSprite->Play(true);
 
 	//result = sys->playSound(sound1, 0, false, &channel);
-	test = 700;
 
 	return true;
 }
@@ -679,7 +678,8 @@ void InClassProj::UpdateKeyboardInput(float dt)
 		mHero->Attack(mTestEnemy);
 		if (mTestEnemy->GetEnemyHealth() <= 0)
 		{
-			mTestItem = mInventory->SelectItem(0);
+			int level = mTestEnemy->GetEnemyLevel();
+			mTestItem = mInventory->SelectItem(level);
 			mHero->GetEquipment(mHero, mTestItem);
 			//delete mTestEnemy;
 		}

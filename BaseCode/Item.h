@@ -2,10 +2,12 @@
 #define ITEM_H
 class Item
 {
+public:
 	Item(int Heal, int Dam, int Eva);
 	Item();
 	~Item();
 
+	/*
 	void useHealItem();
 	void useDamItem();
 	void useDodgeItem();
@@ -19,6 +21,6 @@ class Item
 	void makeFireball();
 	void makeBloodD();
 	void makeFlaggon();
-	void makeMaiden();
+	void makeMaiden();*/
 };
 #endif // ITEM_H

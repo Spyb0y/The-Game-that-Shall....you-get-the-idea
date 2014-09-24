@@ -1,5 +1,6 @@
 #pragma once
 #include "Equipment.h"
+#include "Item.h"
 
 class Enemy;
 
@@ -17,12 +18,13 @@ protected:
 
 
 	void AddPlayerStats(Player* mHero, Equipment* newItem);
-	void DeletePlayerStats(Equipment* newItem);
+	void DeletePlayerStats(Player* mHero, Equipment* newItem);
 	
 public:
 	std::vector<Equipment*> armourInventory;
 	std::vector<Equipment*> weaponInventory;
 	std::vector<Equipment*> accessoryInventory;
+	std::vector<Item*> playerHand;
 
 
 	Player();
@@ -41,6 +43,7 @@ public:
 	int GetPlayerAttack();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
+	void GetItem(Item* newItem);
 
 };
 

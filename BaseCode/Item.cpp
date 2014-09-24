@@ -22,7 +22,7 @@ int eva = 0;
 	{
 
 	}
-
+	/*
 	void Item::useHealItem()
 	{
 		player.hp += heal;
@@ -125,4 +125,4 @@ int eva = 0;
 		{
 			new Item = maiden;	
 		}
-}
+}*/
