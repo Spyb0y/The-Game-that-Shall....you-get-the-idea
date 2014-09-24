@@ -6,7 +6,6 @@ public:
 	Item(int Heal, int Dam, int Eva);
 	Item();
 	~Item();
-
 	/*
 	void useHealItem();
 	void useDamItem();

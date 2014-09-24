@@ -45,7 +45,7 @@ Equipment* Inventory::SelectItem(int i)
 	}
 }
 
-void Inventory::createItemArrays()
+void Inventory::createItemVectors()
 {
 	///////////////////////////////////////int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory
 	//weapons
@@ -140,21 +140,73 @@ void Inventory::createItemArrays()
 
 	//boss items
 	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
-	BossItems.push_back(StalkersScythe);
+	BossEquip.push_back(StalkersScythe);
 
 	Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, true, false, false);
-	BossItems.push_back(GreatAxe);
+	BossEquip.push_back(GreatAxe);
 
 	Equipment* MaceOfAges = new Equipment(0, 0, 15, 5, 0, 2, true, false, false);
-	BossItems.push_back(MaceOfAges);
+	BossEquip.push_back(MaceOfAges);
 
 	Equipment* WingedPlateMail = new Equipment(0, 0, 0, 10, 1, 1, false, true, false);
-	BossItems.push_back(WingedPlateMail);
+	BossEquip.push_back(WingedPlateMail);
 
 	Equipment* DaggerOfDeception = new Equipment(0, 0, 15, 5, 1, 1, true, false, false);
-	BossItems.push_back(DaggerOfDeception);
+	BossEquip.push_back(DaggerOfDeception);
 
 	Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true);
-	BossItems.push_back(KeyOfVictory);
+	BossEquip.push_back(KeyOfVictory);
 
+	//consumable vectors
+	//level one consumable items
+	Item* Potion = new Item(5, 0, 0);
+	ItemsLv1.push_back(Potion);
+
+	//Level 2 consumable vector
+	Item* MPotion = new Item(10, 0, 0);
+	ItemsLv2.push_back(Potion);
+
+	Item* FireBall = new Item(0, 5, 0);
+	ItemsLv2.push_back(FireBall);
+
+	//Level 3 consumable Vector
+	Item* LPotion = new item(15, 0, 0);
+	ItemsLv3.push_back(LPotion);
+
+	Item* Flaggon = new item(0, 0, 5);
+	ItemsLv3.push_back(Flaggon);
+
+	Item* Maiden = new item(0, 0, 0);
+	ItemLv3.push_back(Maiden);
+	 
+	//Level 4 consumable Vector
+	Item* SPPotion = new item(30, 0, 0);
+	ItemLv4.push_back(SPPotion);
+
+	Item* BloodR = new Item(35, 0, 0);
+	ItemLv4.push_back(BloodR);
+
+	//level 5 consumable Vector
+	Item* UPPotion = new Item(50, 0, 0);
+	ItemLv5.push_back(UPPotion);
+
+	Item* BloodD = new Item(0, 10, 0);
+	ItemLv5.push_back(BloodD);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
