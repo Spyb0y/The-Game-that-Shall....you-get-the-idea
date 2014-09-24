@@ -12,7 +12,7 @@ public:
 		delete mNextState;
 	}
 	void Update(float dt);
-	virtual void Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect){}
+	void Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect);
 private:
 	BeginState* begin;
 

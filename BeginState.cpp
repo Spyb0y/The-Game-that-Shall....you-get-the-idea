@@ -1,17 +1,24 @@
 #include "BeginState.h"
-
-#include "InClassProj.cpp"
+#include "InClassProj.h"
+#include <array>
 
 void BeginState::Update(float dt)
 {
-//std::vector<Sprite::Frame*> tile = ((InClassProj*)mStateMachine)->GetVec();
+}
 
-	for (int i = 0; i < board.size(); ++i)
+void BeginState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
+{
+	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
+	//std::vector<Sprite::Frame*> tile = ((InClassProj*)mStateMachine)->GetVec();
+	for (int i = 0; i < 250; ++i)
 	{
-		if (tile[i] != NULL)
+		for (int j = 0; j < 250; ++j)
 		{
-			tile[i]->
+			if (board[i][j] != NULL)
+			{
+				board[i][j]->Draw(vp, context, litTexEffect);
+			}
+			
 		}
 	}
-	
 }

@@ -1,6 +1,6 @@
 //
 //***************************************************************************************
-
+#include "InClassProj.h"
 #include "d3dApp.h"
 #include "StateMachine.h"
 #include "d3dx11Effect.h"
@@ -28,124 +28,11 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <array>
 
 #include "xnacollision.h"
 //#include "fmod.hpp"
 using namespace std;
-
-struct TestParticle
-{
-	XMFLOAT3 pos;
-	XMFLOAT3 vel;
-	XMFLOAT2 size;
-};
-
-const int MAX_PARTICLES = 100000;
-
-class InClassProj : public D3DApp, public StateMachine
-{
-public:
-	InClassProj(HINSTANCE hInstance);
-	~InClassProj();
-
-	bool Init();
-	bool DrawNewTile;
-	void OnResize();
-	void UpdateScene(float dt);
-	void DrawScene();
-
-	void OnMouseDown(WPARAM btnState, int x, int y);
-	void OnMouseUp(WPARAM btnState, int x, int y);
-	void OnMouseMove(WPARAM btnState, int x, int y);
-
-private:
-	void BuildTestPyramid();
-	void BuildVertexLayout();
-	void BuildSceneLights();
-	void BuildParticleVB();
-	void BuildBlendStates();
-	void BuildDSStates();
-
-	void UpdateParticleVB();
-	void UpdateKeyboardInput(float dt);
-
-	XMVECTOR CylToCyl(FXMVECTOR c1Pos, float c1Rad, float c1Height, FXMVECTOR c2Pos, float c2Rad, float c2Height);
-
-//	void DrawParticles();
-
-	
-private:
-
-	LitTexEffect* mLitTexEffect;
-	ParticleEffect* mParticleEffect;
-
-	ThirdPersonCam* mCam;
-	BaseCamera* m2DCam;
-
-	FontRasterizer* mFont;
-
-	XMFLOAT4 mAmbientColour;
-	XMFLOAT4X4 mView;
-	XMFLOAT4X4 mProj;
-	XMFLOAT4X4 m2DProj;
-
-	PointLightOptimized mPointLight;
-	SpotLightOptimized mSpotLight;
-
-	Player* mHero;
-	//Tile* mTile;
-
-	Terrain* mTestTerrain;
-	//SkyBox* mSkyBox;
-	BasicModel* mBarnProjectile;
-	BasicModel* mFarmModel;
-    Sprite* mTestSprite;
-
-//	std::vector<Character*> mTestChars;
-
-	std::vector<Tile*> mTiles;
-
-	std::vector<Projectile*> mProjectiles;
-	std::vector<TestParticle> mParticles;
-	std::vector<Sprite::Frame*> mTileFrames;
-
-//	ID3D11Buffer* mParticleVB;
-//	ID3D11ShaderResourceView* mParticleTexture;
-
-	ID3D11BlendState* mAdditiveBS;
-	ID3D11BlendState* mTransparentBS;
-	ID3D11DepthStencilState* mNoDepthDS;
-	ID3D11DepthStencilState* mFontDS;
-
-	Player* player;
-	float test;
-	PlayerInterface* fuck;
-
-	/*enum GameStates 
-	{
-		gs_START,
-		gs_DRAWPHASE,
-		gs_TILEPLACEMENT,
-		gs_PLAYERMOVE,
-		gs_BATTLEPHASE,
-		gs_LOOTPHASE,
-		gs_ENEMYPHASE,
-		gs_GAMEOVER,
-		gs_HANDMENU,
-		gs_MAINMENU
-	};
-	GameStates mCurrentGameState; */
-
-	enum TileFrames
-	{
-		FOREST1,
-		GRASS1,
-		FOREST2
-	};
-
-	bool mMouseReleased;
-	POINT mLastMousePos;
-};
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	PSTR cmdLine, int showCmd)
@@ -195,9 +82,6 @@ InClassProj::~InClassProj()
 
 	if (mTestTerrain)
 		delete mTestTerrain;
-
-//	if (mTiles)
-//		delete mTiles;
 
 	if (mLitTexEffect)
 		delete mLitTexEffect;
@@ -349,7 +233,7 @@ bool InClassProj::Init()
 	mFont = new FontRasterizer(m2DCam, XMLoadFloat4x4(&m2DProj),
 		mLitTexEffect, 10, 10, font, md3dDevice);
 
-	Sprite::Frame* newFrame = new Sprite::Frame();
+	/*Sprite::Frame* newFrame = new Sprite::Frame();
 	ID3D11ShaderResourceView* image;
 	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/WalkAnim.png",
 		0, 0, &image, 0);
@@ -383,7 +267,7 @@ bool InClassProj::Init()
 	frames.push_back(newFrame);
 
 
-	Tile::Frame* newTileFrame = new Tile::Frame();
+	/*Tile::Frame* newTileFrame = new Tile::Frame();
 	ID3D11ShaderResourceView* tileImage;
 	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/TestTexture.png", 0, 0, &tileImage, 0);
 	newTileFrame->imageWidth = 1024;
@@ -392,7 +276,7 @@ bool InClassProj::Init()
 	newTileFrame->y = 0;
 	newTileFrame->image = tileImage;
 //	frames.push_back(newFrame);
-	mTileFrames.push_back(newTileFrame);
+	mTileFrames.push_back(newTileFrame);*/
 
 	//mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
 //the following line uses Player as though it inherits from the Sprite class and will not work with Rhyse's new code
@@ -404,7 +288,53 @@ bool InClassProj::Init()
 	//result = sys->playSound(sound1, 0, false, &channel);
 	test = 700;
 
+	
+
+	Tile::Frame* newTile = new Tile::Frame();
+	ID3D11ShaderResourceView* image;
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/castle-1-way(east).png",
+		0, 0, &image, 0);
+
+	newTile->imageWidth = 250;
+	newTile->imageHeight = 250;
+	newTile->x = 0;
+	newTile->y = 0;
+	newTile->image = image;
+	mTiles.push_back(newTile);
+	
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/castle-1-way(east).png",
+		0, 0, &image, 0);
+
+	newTile->imageWidth = 250;
+	newTile->imageHeight = 250;
+	newTile->x = 0;
+	newTile->y = 0;
+	newTile->image = image;
+	mTiles.push_back(newTile);
+
+	board = new Tile**[250];
+	for (int i = 0; i < 250; ++i)
+	{
+		board[i] = new Tile*[250];
+		for (int j = 0; j < 250; ++j)
+		{
+			board[i][j] = NULL;
+		}
+
+	}
+
+	std::vector<Sprite::Frame*> tile;
+	tile.push_back(mTiles[0]);
+	board[125][125] = new Tile(XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, md3dDevice);
+	
 	return true;
+
+	
+}
+
+Tile*** InClassProj::GetBoard() const
+{
+	return (Tile***)board;
 }
 
 void InClassProj::BuildBlendStates()
@@ -582,7 +512,7 @@ void InClassProj::DrawScene()
 	vp = vp * view * proj;
 
 	//mTestTerrain->Draw(md3dImmediateContext, vp);
-	
+	mCurrState->Draw(vp, md3dImmediateContext, mLitTexEffect);
 	std::stringstream ss;
 	ss << test;
 	string s = ss.str();
@@ -659,7 +589,7 @@ void InClassProj::UpdateKeyboardInput(float dt)
 			for (int i = 0; i < mTiles.size(); ++i)
 			{
 
-				mTiles[i]->MoveRight(100.0f);
+				//mTiles[i]->MoveRight(100.0f);
 			}
 		}
 	}
