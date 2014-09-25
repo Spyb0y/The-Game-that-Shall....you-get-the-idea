@@ -76,7 +76,6 @@ private:
 
 	//	void DrawParticles();
 
-
 private:
 
 	LitTexEffect* mLitTexEffect;
@@ -97,7 +96,8 @@ private:
 
 	Player* mHero;
 	Enemy* mTestEnemy;
-	Equipment* mTestItem;
+	Equipment* mTestEquip;
+	Item* mTestItem;
 	Inventory* mInventory;
 	//Tile* mTile;
 
