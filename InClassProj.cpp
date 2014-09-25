@@ -23,6 +23,7 @@
 //#include "SkyBox.h"
 #include "Sprite.h"
 #include "Tile.h"
+#include "TilePlacementState.h"
 #include "State.h"
 #include "PlayerInterface.h"
 #include <string>
@@ -33,6 +34,8 @@
 #include "xnacollision.h"
 //#include "fmod.hpp"
 using namespace std;
+
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	PSTR cmdLine, int showCmd)
@@ -292,7 +295,7 @@ bool InClassProj::Init()
 
 	Tile::Frame* newTile = new Tile::Frame();
 	ID3D11ShaderResourceView* image;
-	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/castle-1-way(east).png",
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/castle-1-way(west).png",
 		0, 0, &image, 0);
 
 	newTile->imageWidth = 250;
@@ -322,14 +325,29 @@ bool InClassProj::Init()
 		}
 
 	}
-
 	std::vector<Sprite::Frame*> tile;
 	tile.push_back(mTiles[0]);
-	board[125][125] = new Tile(XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, md3dDevice);
-	
+	board[125][125] = new Tile(XMVectorSet(300.0f, 400.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, md3dDevice);
+
+	int homeCol = ((TilePlacementState*)mTilePlacement)->GetCurrCol();
+	int homeRow = ((TilePlacementState*)mTilePlacement)->GetCurrRow();
+
+	std::vector<Sprite::Frame*> tile2;
+	tile2.push_back(mTiles[1]);
+	TileToBePlaced = new Tile(XMVectorSet(600.0f, 400.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile2, 1.0f, md3dDevice);
+
+	//int currTile = board[curCol][curRow];
+	isPressed = false;
+
+
 	return true;
 
 	
+}
+
+Tile* InClassProj::GetTile() const
+{
+	return TileToBePlaced;
 }
 
 Tile*** InClassProj::GetBoard() const
@@ -420,6 +438,15 @@ void InClassProj::OnResize()
 float timer = 0.0f;
 void InClassProj::UpdateScene(float dt)
 {
+	int curCol = ((TilePlacementState*)mTilePlacement)->GetCurrCol();
+	int curRow = ((TilePlacementState*)mTilePlacement)->GetCurrRow();
+
+	mCurrState->Update(dt);
+
+	//board[curCol][curRow] = new Tile(XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, md3dDevice);
+	//Must have the above call from a vector of images that currently do not exist
+
+
 	UpdateKeyboardInput(dt);
 	RECT screenRect;
 	screenRect.left = 0;
@@ -525,6 +552,8 @@ void InClassProj::DrawScene()
 	md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	HR(mSwapChain->Present(1, 0));
+
+
 }
 
 void InClassProj::OnMouseDown(WPARAM btnState, int x, int y)
@@ -574,24 +603,27 @@ void InClassProj::UpdateKeyboardInput(float dt)
 {
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
-		/*bool isPlaying = false;
-		channel->isPlaying(&isPlaying);
-		if(!isPlaying)
-		{
-		result = sys->playSound(sound1, 0, false, &channel);
-		}*/
-		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
-		{
-			
-		}
-		else
-		{
-			for (int i = 0; i < mTiles.size(); ++i)
-			{
+		((TilePlacementState*)mTilePlacement)->MoveUp();
+	}
 
-				//mTiles[i]->MoveRight(100.0f);
-			}
-		}
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		((TilePlacementState*)mTilePlacement)->MoveLeft();
+	}
+
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		((TilePlacementState*)mTilePlacement)->MoveDown();
+	}
+
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		((TilePlacementState*)mTilePlacement)->MoveRight();
+		
+	}
+	if (GetAsyncKeyState('P') & 0x8000)
+	{
+		((TilePlacementState*)mTilePlacement)->PlaceTile();
 	}
 
 

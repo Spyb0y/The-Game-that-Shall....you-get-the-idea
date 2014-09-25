@@ -4,7 +4,8 @@ class BeginState :
 	public State
 {
 public:
-	BeginState(StateMachine* stateMachine) : State(stateMachine)
+	BeginState(StateMachine* stateMachine) : State(stateMachine),
+		Next(false)
 	{
 	}
 	virtual ~BeginState()
@@ -15,6 +16,7 @@ public:
 	void Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect);
 private:
 	BeginState* begin;
+	bool Next;
 
 
 };

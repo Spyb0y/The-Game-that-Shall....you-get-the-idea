@@ -58,6 +58,7 @@ public:
 
 	void GetImage() const;
 	Tile*** GetBoard() const;
+	Tile* GetTile() const;
 
 
 private:
@@ -126,6 +127,9 @@ private:
 
 	std::vector<Tile::Frame*> mTiles;
 	Tile*** board;
+	Tile* TileToBePlaced;
+
+	bool isPressed;
 
 
 
