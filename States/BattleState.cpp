@@ -4,29 +4,37 @@ void BattleState::Update(float dt)
 {
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		mHero->Attack(mTestEnemy);
-		if (mTestEnemy->GetEnemyHealth() <= 0)
+		if (!isAPressed)
 		{
-			int level = mTestEnemy->GetEnemyLevel();
-			mEquip = mInventory->SelectEquip(level);
-			mItem = mInventory->SelectItem(level);
-			mHero->GetEquipment(mHero, mEquip);
-			mHero->GetItem(mItem);
-			delete mTestEnemy;
-			Next = true;
-		}
-		else
-		{
-		mTestEnemy->Attack(mHero);
-		}
-		if (mHero->GetPlayerHealth() <= 0)
-		{
-			//set game over state
+			mHero->Attack(mTestEnemy);
+			if (mTestEnemy->GetEnemyHealth() <= 0)
+			{
+				int level = mTestEnemy->GetEnemyLevel();
+				mEquip = mInventory->SelectEquip(level);
+				mItem = mInventory->SelectItem(level);
+				mHero->GetEquipment(mHero, mEquip);
+				mHero->GetItem(mItem);
+				delete mTestEnemy;
+				Next = true;
+			}
+			else
+			{
+				mTestEnemy->Attack(mHero);
+			}
+			if (mHero->GetPlayerHealth() <= 0)
+			{
+				//set game over state
+			}
+			if (Next)
+			{
+				mStateMachine->SetCurrState(mNextState);
+			}
+			isAPressed = true;
 		}
 	}
-	if (Next)
+	else if (!GetAsyncKeyState('A') & 0x8000)
 	{
-		mStateMachine->SetCurrState(mNextState);
+		isAPressed = false;
 	}
 }
 

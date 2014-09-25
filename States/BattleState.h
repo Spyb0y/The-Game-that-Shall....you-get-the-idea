@@ -8,6 +8,7 @@ public:
 	BattleState(StateMachine* stateMachine) : State(stateMachine)
 	{
 		Next = false;
+		isAPressed = false;
 	}
 	virtual ~BattleState()
 	{
@@ -28,6 +29,7 @@ private:
 	Item* mItem;
 
 	bool Next;
+	bool isAPressed;
 
 	//test code
 	Enemy* mTestEnemy;
