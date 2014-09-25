@@ -8,11 +8,20 @@ public:
 	Enemy(float health, int damage, int level);
 	~Enemy();
 	virtual void Attack(Player*){}
-	virtual int GetEnemyHealth(){return 0;}
+	virtual int GetEnemyHealth(){ return 0; }
 	virtual void SetEnemyHealth(int){};
 	virtual int GetEnemyLevel(){ return 0; }
 protected:
 	bool isDefeated;
+	virtual int Sting(int mDamage);
+	virtual int Bite(int mDamage);
+	virtual int Guard(int mHealth);
+	virtual int Regeneration(int mHp);
+	virtual int Rage(int mDamage);
+	virtual int FlameBreath(int mDamage);
+	virtual void Wait();
+	//final bosses special attack
+	virtual int FireBreath(int mDamage);
 
 };
 
@@ -33,7 +42,7 @@ protected:
 	const int MAX_HIT;
 	//Terrain pointer to terrain class
 	int mLevel;
-	
+
 };
 
 class Basilisk : public Enemy

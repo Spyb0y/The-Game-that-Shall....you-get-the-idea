@@ -1,6 +1,5 @@
 #include "Enemy.h"
 
-
 Enemy::Enemy(float health, int damage, int level)
 {
 }
@@ -22,7 +21,12 @@ MIN_HIT(5)
 void ArmoredPhesant::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
+	if (randSkill < 50)
+	{
+		ArmoredPhesant::SetEnemyHealth(Enemy::Guard(mHealth));
+	}
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
@@ -62,16 +66,25 @@ MIN_HIT(5)
 void Basilisk::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
+
 		int playerHealth = mHero->GetPlayerHealth();
 		playerHealth = playerHealth - mDamage;
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
 	{
-		return;
+		if (randSkill < 30)
+		{
+			Basilisk::Attack(mHero);
+		}
+		else
+		{
+			return;
+		}
 	}
 }
 
@@ -90,7 +103,7 @@ int Basilisk::GetEnemyLevel()
 	return mLevel;
 }
 
-Crocodile::Crocodile() : 
+Crocodile::Crocodile() :
 MAX_HIT(25),
 MIN_HIT(6)
 {
@@ -102,11 +115,19 @@ MIN_HIT(6)
 void Crocodile::Attack(Player* mHero)
 {
 	int hitValue;
+	int skillRand = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (skillRand < 40)
+		{
+			playerHealth = playerHealth - Enemy::Bite(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -182,11 +203,19 @@ MIN_HIT(6)
 void Dragon::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 10)
+		{
+			playerHealth = playerHealth - Enemy::FlameBreath(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -345,6 +374,7 @@ MIN_HIT(6)
 void GiantEagle::Attack(Player* mHero)
 {
 	int hitValue;
+	int skillRand = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -354,7 +384,14 @@ void GiantEagle::Attack(Player* mHero)
 	}
 	else
 	{
-		return;
+		if (skillRand < 20)
+		{
+			GiantEagle::Attack(mHero);
+		}
+		else
+		{
+			return;
+		}
 	}
 }
 
@@ -385,11 +422,19 @@ MIN_HIT(5)
 void GiantRat::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 50)
+		{
+			playerHealth = playerHealth - Enemy::Bite(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -425,11 +470,19 @@ MIN_HIT(8)
 void GiantWasp::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 45)
+		{
+			playerHealth = playerHealth - Enemy::Sting(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -465,6 +518,7 @@ MIN_HIT(4)
 void Gorgon::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -474,7 +528,14 @@ void Gorgon::Attack(Player* mHero)
 	}
 	else
 	{
-		return;
+		if (randSkill < 15)
+		{
+			Gorgon::Attack(mHero);
+		}
+		else
+		{
+			return;
+		}
 	}
 }
 
@@ -546,11 +607,19 @@ MIN_HIT(6)
 void Ogre::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 15)
+		{
+			playerHealth = playerHealth - Enemy::Rage(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -627,11 +696,19 @@ MIN_HIT(10)
 void RadDragon::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 15)
+		{
+			playerHealth = playerHealth - Enemy::FireBreath(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -707,6 +784,11 @@ MIN_HIT(5)
 void StoneGolem::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
+	if (randSkill < 50)
+	{
+		StoneGolem::SetEnemyHealth(Enemy::Guard(mHealth));
+	}
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -788,6 +870,11 @@ MIN_HIT(3)
 void TheKing’sRoyalGuard::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
+	if (randSkill < 10)
+	{
+		TheKing’sRoyalGuard::SetEnemyHealth(Enemy::Guard(mHealth));
+	}
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -827,6 +914,11 @@ MIN_HIT(30)
 void TheStalker::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
+	if (randSkill <= 60)
+	{
+		return;
+	}
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -862,6 +954,11 @@ MIN_HIT(5)
 void Troll::Attack(Player* mHero)
 {
 	int hitValue;
+	int skillRand = rand() % 100 + 1;
+	if (skillRand < 50)
+	{
+	Troll:SetEnemyHealth(Enemy::Regeneration(mHealth));
+	}
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
@@ -902,11 +999,19 @@ MIN_HIT(8)
 void WarHound::Attack(Player* mHero)
 {
 	int hitValue;
+	int randSkill = rand() % 100 + 1;
 	hitValue = rand() % (MAX_HIT - MIN_HIT) - MIN_HIT;
 	if (hitValue > mHero->GetPlayerEvade())
 	{
 		int playerHealth = mHero->GetPlayerHealth();
-		playerHealth = playerHealth - mDamage;
+		if (randSkill < 30)
+		{
+			playerHealth = playerHealth - Enemy::Bite(mDamage);
+		}
+		else
+		{
+			playerHealth = playerHealth - mDamage;
+		}
 		mHero->SetPlayerHealth(playerHealth);
 	}
 	else
@@ -928,6 +1033,48 @@ void WarHound::SetEnemyHealth(int EnemyHealth)
 int WarHound::GetEnemyLevel()
 {
 	return mLevel;
+}
+
+int Enemy::Sting(int mDamage)
+{
+	mDamage += 3;
+	return mDamage;
+}
+int Enemy::Bite(int mDamage)
+{
+	mDamage += 2;
+	return mDamage;
+}
+int Enemy::Guard(int mHp)
+{
+	mHp += 1;
+	return mHp;
+}
+int Enemy::Regeneration(int mHp)
+{
+	mHp += 2;
+	return mHp;
+}
+int Enemy::Rage(int mDamage)
+{
+	mDamage += 5;
+	return mDamage;
+
+}
+int Enemy::FlameBreath(int mDamage)
+{
+	mDamage += 5;
+	return mDamage;
+}
+void Enemy::Wait()
+{
+
+}
+//final bosses special attack
+int Enemy::FireBreath(int mDamage)
+{
+	mDamage += 20;
+	return mDamage;
 }
 
 
