@@ -457,7 +457,6 @@ public:
 	int GetEnemyHealth();
 	void SetEnemyHealth(int);
 	int GetEnemyLevel();
-	void Bite();
 protected:
 	float mHealth;
 	float mDamage;
