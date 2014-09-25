@@ -19,6 +19,7 @@ Player::Player()
 	mMaxAccessorySlots = 1;
 	mMaxArmourSlots = 2;
 	mMaxWeaponSlots = 2;
+	mMaxHandSize = 5;
 }
 
 void Player::Update(float dt)
@@ -61,33 +62,36 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 	{
 		armourInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (armourInventory.size() + 1 > mMaxArmourSlots)
+		if (armourInventory.size() > mMaxArmourSlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, armourInventory[armourInventory.size() - 1]);
-			delete armourInventory[armourInventory.size() - 1];
+			//delete armourInventory[armourInventory.size() - 1];
+			armourInventory.erase(armourInventory.begin() + armourInventory.size() - 1);
 		}
 	}
 	if (newItem->isWeapon == true)
 	{
 		weaponInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (weaponInventory.size() + 1 > mMaxWeaponSlots)
+		if (weaponInventory.size() > mMaxWeaponSlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, weaponInventory[weaponInventory.size() - 1]);
-			delete weaponInventory[weaponInventory.size() - 1];
+			//delete weaponInventory[weaponInventory.size() - 1];
+			weaponInventory.erase(weaponInventory.begin() + weaponInventory.size() - 1);
 		}
 	}
 	if (newItem->isAccessory == true)
 	{
 		accessoryInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (accessoryInventory.size() + 1 > mMaxAccessorySlots)
+		if (accessoryInventory.size() > mMaxAccessorySlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, accessoryInventory[accessoryInventory.size() - 1]);
-			delete accessoryInventory[accessoryInventory.size() - 1];
+			//delete accessoryInventory[accessoryInventory.size() - 1];
+			accessoryInventory.erase(accessoryInventory.begin() + accessoryInventory.size() - 1);
 		}
 	}
 }
@@ -95,10 +99,11 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 void Player::GetItem(Item* newItem)
 {
 	playerHand.push_back(newItem);
-	if (playerHand.size() + 1 > 5)
+	if (playerHand.size() > mMaxHandSize)
 	{
 		//ask player to choose an item
-		delete playerHand[playerHand.size() - 1];
+		//delete playerHand[playerHand.size() - 1];
+		playerHand.erase(playerHand.begin() + playerHand.size() - 1);
 	}
 }
 

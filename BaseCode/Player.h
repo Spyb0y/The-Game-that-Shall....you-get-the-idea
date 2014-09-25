@@ -15,6 +15,7 @@ protected:
 	unsigned mMaxAccessorySlots;
 	unsigned mMaxArmourSlots;
 	unsigned mMaxWeaponSlots;
+	unsigned mMaxHandSize;
 
 
 	void AddPlayerStats(Player* mHero, Equipment* newItem);
