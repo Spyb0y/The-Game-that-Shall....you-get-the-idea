@@ -1,5 +1,4 @@
 #include "Enemy.h"
-srand(time(NULL));
 
 Enemy::Enemy(float health, int damage, int level)
 {
