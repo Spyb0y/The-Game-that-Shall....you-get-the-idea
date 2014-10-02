@@ -293,6 +293,10 @@ void InClassProj::BuildBlendStates()
 	HR(md3dDevice->CreateBlendState(&bsDesc, &mTransparentBS));
 }
 
+Tile InClassProj::GetTile()
+{
+	return Tile;
+}
 void InClassProj::BuildDSStates()
 {
 	D3D11_DEPTH_STENCIL_DESC dsDesc;

@@ -20,12 +20,13 @@ public:
 	//vector of level 5 equipment
 	std::vector<Equipment*> EquipLv5;
 	//vector to hold boss items
-	//first item is minotaurs item
-	//second item is Stone guardians item
-	//third item is Gargoyles item
-	//fourth item is Hornet Queen's item
-	//fifthitem is Rad Dragon's item
-	//sixth  item is stalkers item
+	//first item is stalkers item
+	//second item is minotaurs item
+	//third item is Stone guardians item
+	//fourth item is Gargoyles item
+	//fifth item is Hornet Queen's item
+	//sixth item is Rad Dragon's item
+	
 	std::vector<Equipment*> BossEquip;
 	void createItemVectors();
 	Equipment* SelectEquip(int);
@@ -52,12 +53,17 @@ public:
 	std::vector<Enemy*> SwampEnemies;
 	//boss enemies
 	std::vector<Enemy*> BossEnemies;
-	//first element is minotaur
-	//second element is stone guardian
-	//third element is gargoyle
-	//fourth element is queen hornet
-	//fifth elemnt is rad dragon
-	//sixth element is stalker
+	//first element is stalker
+	//second element is minotaur
+	//third element is stone guardian
+	//fourth element is gargoyle
+	//fifth element is queen hornet
+	//sixth elemnt is rad dragon
 	void CreateEnemyVectors;
+
+	int GetForestSize();
+	int GetCastleSize();
+	int GetSwampSize();
+	int GetMountainSize();
 };
 

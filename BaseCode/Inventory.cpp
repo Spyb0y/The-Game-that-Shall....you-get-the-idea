@@ -173,6 +173,8 @@ void Inventory::createItemVectors()
 	EquipLv3.push_back(JewelBracelet);
 
 	//boss items
+	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
+	BossEquip.push_back(StalkersScythe);
 
 	Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, true, false, false);
 	BossEquip.push_back(GreatAxe);
@@ -188,9 +190,6 @@ void Inventory::createItemVectors()
 
 	Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true);
 	BossEquip.push_back(KeyOfVictory);
-
-	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
-	BossEquip.push_back(StalkersScythe);
 
 	//consumable vectors
 	//level one consumable items
@@ -258,6 +257,7 @@ void Inventory::CreateEnemyVectors()
 	Enemy* HornetQueen = new HornetQueen() : MAX_HIT(50), MIN_HIT(5);//boss 4
 	Enemy* RadDragon = new RadDragon() : MAX_HIT(80), MIN_HIT(10);//boss 5
 	Enemy* Stalker = new Stalker() : MAX_HIT(110), MIN_HIT(30);//boss 6
+
 	//push the pointers into the correct arrays
 	//castle vector
 	CastleEnemies.push_back(Rat);
@@ -268,6 +268,7 @@ void Inventory::CreateEnemyVectors()
 	CastleEnemies.push_back(GiantEagle);
 	CastleEnemies.push_back(TheKing’sRoyalGuard);
 	CastleEnemies.push_back(DeviousPenguin);
+
 	//forest vector
 	ForestEnemies.push_back(Rat);
 	ForestEnemies.push_back(GiantRat);
@@ -296,18 +297,39 @@ void Inventory::CreateEnemyVectors()
 	SwampEnemies.push_back(DeviousPenguin);
 
 	//boss vector
-	//first element is minotaur
-	BossEnemies.push_back(Minotaur);
-	//second element is stone guardian
-	BossEnemies.push_back(StoneGuardian);
-	//third element is gargoyle
-	BossEnemies.push_back(Gargoyle);
-	//fourth element is queen hornet
-	BossEnemies.push_back(QueenHornet);
-	//fifth elemnt is rad dragon
-	BossEnemies.push_back(RadDragon);
-	//sixth element is stalker
+	//first element is stalker
 	BossEnemies.push_back(Stalker);
+	//second element is minotaur
+	BossEnemies.push_back(Minotaur);
+	//third element is stone guardian
+	BossEnemies.push_back(StoneGuardian);
+	//fourth element is gargoyle
+	BossEnemies.push_back(Gargoyle);
+	//fifth element is queen hornet
+	BossEnemies.push_back(QueenHornet);
+	//sixth elemnt is rad dragon
+	BossEnemies.push_back(RadDragon);
+	
+}
+
+int GetForestSize()
+{
+	return ForestEnemies.size();
+}
+
+int GetCastleSize()
+{
+	return CastleEnemies.size();
+}
+
+int GetSwampSize()
+{
+	return SwampEnemies.size();
+}
+
+int GetMountainSize()
+{
+	return MountainEnemies.size();
 }
 
 

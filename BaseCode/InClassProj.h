@@ -61,6 +61,7 @@ public:
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
 
+	Tile GetTile();
 private:
 	void BuildTestPyramid();
 	void BuildVertexLayout();
@@ -75,9 +76,6 @@ private:
 	XMVECTOR CylToCyl(FXMVECTOR c1Pos, float c1Rad, float c1Height, FXMVECTOR c2Pos, float c2Rad, float c2Height);
 
 	//	void DrawParticles();
-
-private:
-
 	LitTexEffect* mLitTexEffect;
 	//ParticleEffect* mParticleEffect;
 
