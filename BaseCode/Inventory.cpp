@@ -173,8 +173,6 @@ void Inventory::createItemVectors()
 	EquipLv3.push_back(JewelBracelet);
 
 	//boss items
-	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
-	BossEquip.push_back(StalkersScythe);
 
 	Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, true, false, false);
 	BossEquip.push_back(GreatAxe);
@@ -190,6 +188,9 @@ void Inventory::createItemVectors()
 
 	Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true);
 	BossEquip.push_back(KeyOfVictory);
+
+	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
+	BossEquip.push_back(StalkersScythe);
 
 	//consumable vectors
 	//level one consumable items
@@ -226,6 +227,87 @@ void Inventory::createItemVectors()
 
 	Item* BloodD = new Item(0, 10, 0);
 	ItemsLv5.push_back(BloodD);
+}
+
+void Inventory::CreateEnemyVectors()
+{
+	//create the pointers to the enemies
+	Enemy* Rat = new Rat() : MAX_HIT(20), MIN_HIT(0);
+	Enemy* Peasant = new Peasant) : MAX_HIT(20), MIN_HIT(0);
+	Enemy* ArmouredPhesant = new ArmouredPhesant() : MAX_HIT(25), MIN_HIT(5);
+	Enemy* GiantRat = new GiantRat() : MAX_HIT(5), MIN_HIT(5);
+	Enemy* WarHound = new WarHound() ::MAX_HIT(20), MIN_HIT(8);
+	Enemy* GiantBeetle = new GiantBeetle() : MAX_HIT(20), MIN_HIT(0);
+	Enemy* GiantWasp = new GiantWasp() : MAX_HIT(25), MIN_HIT(8);
+	Enemy* StoneGolem = new StoneGolem() : MAX_HIT(15), MIN_HIT(5);
+	Enemy* Gorgon = new Gorgon() : MAX_HIT(40), MIN_HIT(4);
+	Enemy* GiantEagle = new GiantEagle() : MAX_HIT(20), MIN_HIT(6);
+	Enemy* Troll = new Troll : MAX_HIT(30), MIN_HIT(5); 
+	Enemy* Crocodile = new Crocodile() : MAX_HIT(25), MIN_HIT(6);
+	Enemy* DeviousPenguin = new DeviousPenguin(): MAX_HIT(10), MIN_HIT(1);
+	Enemy* Basilisk = new Basilisk() : MAX_HIT(15), MIN_HIT(5); 
+	Enemy* Ogre = new Ogre() : MAX_HIT(30), MIN_HIT(6);
+	Enemy* Dragon = new Dragon() : MAX_HIT(30), MIN_HIT(6);
+	Enemy* TheKing’sRoyalGuard = new TheKing’sRoyalGuard() : MAX_HIT(30), MIN_HIT(3);
+
+	//boss monster pointers
+
+	Enemy* Minotaur = new Minotaur() : MAX_HIT(25), MIN_HIT(1); // boss 1
+	Enemy* StoneGuardian = new StoneGuardian() : MAX_HIT(30), MIN_HIT(1);//boss 2
+	Enemy* Gargoyle = new Gargoyle() : MAX_HIT(50), MIN_HIT(1);//boss 3
+	Enemy* HornetQueen = new HornetQueen() : MAX_HIT(50), MIN_HIT(5);//boss 4
+	Enemy* RadDragon = new RadDragon() : MAX_HIT(80), MIN_HIT(10);//boss 5
+	Enemy* Stalker = new Stalker() : MAX_HIT(110), MIN_HIT(30);//boss 6
+	//push the pointers into the correct arrays
+	//castle vector
+	CastleEnemies.push_back(Rat);
+	CastleEnemies.push_back(Peasant);
+	CastleEnemies.push_back(ArmouredPhesant);
+	CastleEnemies.push_back(GiantRat);
+	CastleEnemies.push_back(WarHound);
+	CastleEnemies.push_back(GiantEagle);
+	CastleEnemies.push_back(TheKing’sRoyalGuard);
+	CastleEnemies.push_back(DeviousPenguin);
+	//forest vector
+	ForestEnemies.push_back(Rat);
+	ForestEnemies.push_back(GiantRat);
+	ForestEnemies.push_back(WarHound);
+	ForestEnemies.push_back(GiantBeetle);
+	ForestEnemies.push_back(GiantWasp);
+	ForestEnemies.push_back(Troll);
+	ForestEnemies.push_back(GiantEagle);
+	ForestEnemies.push_back(Ogre);
+	
+	//mountain vector
+	MountainEnemies.push_back(StoneGolem);
+	MountainEnemies.push_back(GiantEagle);
+	MountainEnemies.push_back(Troll);
+	MountainEnemies.push_back(Basilisk);
+	MountainEnemies.push_back(Ogre);
+	MountainEnemies.push_back(Dragon);
+	MountainEnemies.push_back(DeviousPenguin);
+
+	//swamp vector
+	SwampEnemies.push_back(GiantRat);
+	SwampEnemies.push_back(Gorgon);
+	SwampEnemies.push_back(Troll);
+	SwampEnemies.push_back(Crocodile);
+	SwampEnemies.push_back(Basilisk);
+	SwampEnemies.push_back(DeviousPenguin);
+
+	//boss vector
+	//first element is minotaur
+	BossEnemies.push_back(Minotaur);
+	//second element is stone guardian
+	BossEnemies.push_back(StoneGuardian);
+	//third element is gargoyle
+	BossEnemies.push_back(Gargoyle);
+	//fourth element is queen hornet
+	BossEnemies.push_back(QueenHornet);
+	//fifth elemnt is rad dragon
+	BossEnemies.push_back(RadDragon);
+	//sixth element is stalker
+	BossEnemies.push_back(Stalker);
 }
 
 

@@ -64,8 +64,17 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 		AddPlayerStats(mHero, newItem);
 		if (armourInventory.size() > mMaxArmourSlots)
 		{
+			float XPosItem = 0.0f;
 			//ask player to remove an item
-			DeletePlayerStats(mHero, armourInventory[armourInventory.size() - 1]);
+			for (unsigned i = 0; i < armourInventory.size(); i++)
+			{
+				std::stringstream ss;
+				ss << armourInventoy[i];
+				string s = ss.str();
+				mFont->DrawFont(md3dImmediateContext, XMVectorSet(x, 200.0f, 0.0f, 0.0f), 50, 50, 15, s);
+				XPosItem += 10;
+			}
+			//DeletePlayerStats(mHero, armourInventory[armourInventory.size() - 1]);
 			//delete armourInventory[armourInventory.size() - 1];
 			armourInventory.erase(armourInventory.begin() + armourInventory.size() - 1);
 		}
@@ -77,7 +86,12 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 		if (weaponInventory.size() > mMaxWeaponSlots)
 		{
 			//ask player to remove an item
-			DeletePlayerStats(mHero, weaponInventory[weaponInventory.size() - 1]);
+			for (unsigned i = 0; i < weaponInventory.size(); i++)
+			{
+				std::stringstream ss;
+				ss << weaponInventoy[i];
+			}
+			//DeletePlayerStats(mHero, weaponInventory[weaponInventory.size() - 1]);
 			//delete weaponInventory[weaponInventory.size() - 1];
 			weaponInventory.erase(weaponInventory.begin() + weaponInventory.size() - 1);
 		}

@@ -463,7 +463,6 @@ void InClassProj::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
-
 	if ((btnState & MK_RBUTTON) != 0)
 	{
 		
