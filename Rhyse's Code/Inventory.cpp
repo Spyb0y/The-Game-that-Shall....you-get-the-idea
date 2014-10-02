@@ -201,40 +201,41 @@ void Inventory::createItemVectors()
 
 	//consumable vectors
 	//level one consumable items
-	Item* Potion = new Item(5, 0, 0);
+	Item* Potion = new Item(5, 0, 0, Item::Type::_Potion);
 	ItemsLv1.push_back(Potion);
 
 	//Level 2 consumable vector
-	Item* MPotion = new Item(10, 0, 0);
+	Item* MPotion = new Item(10, 0, 0, Item::Type::_MPotion);
 	ItemsLv2.push_back(Potion);
 
-	Item* FireBall = new Item(0, 5, 0);
+	Item* FireBall = new Item(0, 5, 0, Item::Type::_FireBall);
 	ItemsLv2.push_back(FireBall);
 
 	//Level 3 consumable Vector
-	Item* LPotion = new Item(15, 0, 0);
+	Item* LPotion = new Item(15, 0, 0, Item::Type::_LPotion);
 	ItemsLv3.push_back(LPotion);
 
-	Item* Flaggon = new Item(0, 0, 5);
+	Item* Flaggon = new Item(0, 0, 5, Item::Type::_Flaggon);
 	ItemsLv3.push_back(Flaggon);
 
-	Item* Maiden = new Item(0, 0, 0);
+	Item* Maiden = new Item(0, 0, 0, Item::Type::_Maiden);
 	ItemsLv3.push_back(Maiden);
 	 
 	//Level 4 consumable Vector
-	Item* SPPotion = new Item(30, 0, 0);
+	Item* SPPotion = new Item(30, 0, 0, Item::Type::_SPPotion);
 	ItemsLv4.push_back(SPPotion);
 
-	Item* BloodR = new Item(35, 0, 0);
+	Item* BloodR = new Item(35, 0, 0, Item::Type::_BloodR);
 	ItemsLv4.push_back(BloodR);
 
 	//level 5 consumable Vector
-	Item* UPPotion = new Item(50, 0, 0);
+	Item* UPPotion = new Item(50, 0, 0, Item::Type::_UPPotion);
 	ItemsLv5.push_back(UPPotion);
 
-	Item* BloodD = new Item(0, 10, 0);
+	Item* BloodD = new Item(0, 10, 0, Item::Type::_BloodD);
 	ItemsLv5.push_back(BloodD);
 }
+
 
 
 

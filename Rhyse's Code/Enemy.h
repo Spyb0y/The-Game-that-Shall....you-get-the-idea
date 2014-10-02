@@ -1,6 +1,7 @@
 #pragma once
 #include <ctime>
-#include "Player.h"
+
+class Player;
 
 class Enemy
 {

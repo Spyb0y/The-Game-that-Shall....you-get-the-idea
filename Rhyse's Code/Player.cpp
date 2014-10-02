@@ -20,6 +20,10 @@ Player::Player()
 	mMaxArmourSlots = 2;
 	mMaxWeaponSlots = 2;
 	mMaxHandSize = 5;
+
+	//test code
+	Item* FireBall = new Item(0, 5, 0, Item::Type::_FireBall);
+	playerHand.push_back(FireBall);
 }
 
 void Player::Update(float dt)
@@ -60,6 +64,79 @@ int Player::GetPlayerAttack()
 	return mDamage;
 }
 
+std::stringstream Player::DisplayItems()
+{
+	std::stringstream ss;
+	int i = 0;
+	while (i < playerHand.size())
+	{
+		if (playerHand[i]->GetItemType() == Item::Type::_Potion)
+		{
+			ss << "Select " << i << " to use your Small Health Potion";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_MPotion)
+		{
+			ss << "Select " << i << " to use your Medium Health Potion";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_FireBall)
+		{
+			ss << "Select " << i << " to use your Fireball";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_LPotion)
+		{
+			ss << "Select " << i << " to use your Large Health Potion";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_Flaggon)
+		{
+			ss << "Select " << i << " to use your Flagon of Mead";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_Maiden)
+		{
+			ss << "Select " << i << " to use your Voluptuous Maiden";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_SPPotion)
+		{
+			ss << "Select " << i << " to use your Super Health Potion";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_BloodR)
+		{
+			ss << "Select " << i << " to use your Blood of the Righteous";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_UPPotion)
+		{
+			ss << "Select " << i << " to use your Ultra Health Potion";
+		}
+		else if (playerHand[i]->GetItemType() == Item::Type::_BloodD)
+		{
+			ss << "Select " << i << " to use your Blood of the Damned";
+		}
+		else
+		{
+			ss << "error";
+		}
+		++i;
+	}
+	return ss;
+}
+
+void Player::UseItem(int i, Player* mHero)
+{
+	mHero->mHealth = mHero->mHealth + playerHand[i]->GetItemHeal();
+	mHero->mDamage = mHero->mDamage + playerHand[i]->GetItemDamage();
+	mHero->mEvade = mHero->mEvade + playerHand[i]->GetItemEvade();
+}
+
+void Player::ResetStats(int i, Player* mHero)
+{
+	mHero->mHealth = mHero->mHealth - playerHand[i]->GetItemHeal();
+	mHero->mDamage = mHero->mDamage - playerHand[i]->GetItemDamage();
+	mHero->mEvade = mHero->mEvade - playerHand[i]->GetItemEvade();
+}
+
+void Player::DeleteItem(int i)
+{
+	playerHand.erase(playerHand.begin() + i);
+}
 
 void Player::GetEquipment(Player* mHero, Equipment* newItem)
 {

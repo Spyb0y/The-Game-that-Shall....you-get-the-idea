@@ -1,8 +1,9 @@
 #pragma once
+#include <ctime>
 #include "Equipment.h"
 #include "Item.h"
-
-class Enemy;
+#include "Inventory.h"
+#include "Enemy.h"
 
 class Player
 {
@@ -41,11 +42,16 @@ public:
 	int GetPlayerEvade();
 	unsigned GetPlayerDefense();
 
+	std::stringstream DisplayItems();
+
 	//test code
 	int GetPlayerAttack();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
 	void GetItem(Item* newItem);
+	void UseItem(int i, Player* mHero);
+	void ResetStats(int i, Player* mHero);
+	void DeleteItem(int i);
 
 };
 

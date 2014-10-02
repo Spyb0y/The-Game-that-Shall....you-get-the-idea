@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include <ctime>
 #include "Equipment.h"
 #include "Item.h"
@@ -41,5 +42,9 @@ public:
 	//level 5 item vector
 	std::vector<Item*> ItemsLv5;
 	Item* SelectItem(int);
+
+
+private:
+
 };
 
