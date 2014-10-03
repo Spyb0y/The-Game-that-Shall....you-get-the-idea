@@ -1,38 +1,30 @@
-//
-//***************************************************************************************
-
+#pragma once
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <array>
 #include "d3dApp.h"
 #include "StateMachine.h"
 #include "d3dx11Effect.h"
 #include "MathHelper.h"
 #include "LightHelper.h"
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-
-#include "Vertex.h"
-#include "Quad.h"
-#include "ThirdPersonCam.h"
-#include "Cube.h"
-#include "GraphicalObject.h"
-#include "Projectile.h"
-//#include "Effect.h"
-#include "FontRasterizer.h"
 #include "Terrain.h"
+#include "ThirdPersonCam.h"
+#include "Vertex.h"
+#include "FontRasterizer.h"
 #include "Player.h"
-//#include "SkyBox.h"
 #include "Sprite.h"
 #include "Tile.h"
 #include "State.h"
 #include "Enemy.h"
+#include "Item.h"
 #include "Equipment.h"
 #include "Inventory.h"
-//#include "PlayerInterface.h"
-#include <string>
-#include <sstream>
-#include <iostream>
+#include "StartTurnState.h"
 
-#include "xnacollision.h"
 //#include "fmod.hpp"
 using namespace std;
 
@@ -61,26 +53,37 @@ public:
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
 
-	Tile GetTile();
+	void GetImage() const;
+	Tile*** GetBoard() const;
+	std::vector<Tile::Frame*> GetTileLvl1() const;
+	std::vector<Tile::Frame*> GetTileLvl2() const;
+	std::vector<Tile::Frame*> GetTileLvl3() const;
+	std::vector<Tile::Frame*> GetTileLvl4() const;
+	std::vector<Tile::Frame*> GetTileLvl5() const;
+
+	int GetXPos();
+	int GetYPos();
+	FontRasterizer* GetFont();
+	Sprite::Frame* GetTile();
+	void ItemMenu();
+
 private:
 	void BuildTestPyramid();
 	void BuildVertexLayout();
 	void BuildSceneLights();
-	void BuildParticleVB();
 	void BuildBlendStates();
 	void BuildDSStates();
 
-	void UpdateParticleVB();
 	void UpdateKeyboardInput(float dt);
 
-	XMVECTOR CylToCyl(FXMVECTOR c1Pos, float c1Rad, float c1Height, FXMVECTOR c2Pos, float c2Rad, float c2Height);
 
-	//	void DrawParticles();
+private:
+
 	LitTexEffect* mLitTexEffect;
-	//ParticleEffect* mParticleEffect;
 
 	ThirdPersonCam* mCam;
 	BaseCamera* m2DCam;
+	Terrain* mTestTerrain;
 
 	FontRasterizer* mFont;
 
@@ -94,58 +97,34 @@ private:
 
 	Player* mHero;
 	Enemy* mTestEnemy;
-	Equipment* mTestEquip;
-	Item* mTestItem;
-	Inventory* mInventory;
-	//Tile* mTile;
 
-	Terrain* mTestTerrain;
-	//SkyBox* mSkyBox;
-	BasicModel* mBarnProjectile;
-	BasicModel* mFarmModel;
+	Inventory* mInventory;
+
 	Sprite* mTestSprite;
 
-	//	std::vector<Character*> mTestChars;
-
-	std::vector<Tile*> mTiles;
-
-	std::vector<Projectile*> mProjectiles;
-	std::vector<TestParticle> mParticles;
-	std::vector<Sprite::Frame*> mTileFrames;
-
-	//	ID3D11Buffer* mParticleVB;
-	//	ID3D11ShaderResourceView* mParticleTexture;
 
 	ID3D11BlendState* mAdditiveBS;
 	ID3D11BlendState* mTransparentBS;
 	ID3D11DepthStencilState* mNoDepthDS;
 	ID3D11DepthStencilState* mFontDS;
 
-	Player* player;
 	float test;
-	//PlayerInterface* fuck;
+	float enemyHealth;
 
-	/*enum GameStates
-	{
-	gs_START,
-	gs_DRAWPHASE,
-	gs_TILEPLACEMENT,
-	gs_PLAYERMOVE,
-	gs_BATTLEPHASE,
-	gs_LOOTPHASE,
-	gs_ENEMYPHASE,
-	gs_GAMEOVER,
-	gs_HANDMENU,
-	gs_MAINMENU
-	};
-	GameStates mCurrentGameState; */
+	Sprite::Frame* tile;
+	Sprite::Frame* tile2;
 
-	enum TileFrames
-	{
-		FOREST1,
-		GRASS1,
-		FOREST2
-	};
+	std::vector<Tile::Frame*> TileLvl1;
+	std::vector<Tile::Frame*> TileLvl2;
+	std::vector<Tile::Frame*> TileLvl3;
+	std::vector<Tile::Frame*> TileLvl4;
+	std::vector<Tile::Frame*> TileLvl5;
+	std::vector<Tile::Frame*> mTiles;
+	Tile*** board;
+
+	bool isPressed;
+
+	XMFLOAT2 TilePos;
 
 	bool mMouseReleased;
 	POINT mLastMousePos;

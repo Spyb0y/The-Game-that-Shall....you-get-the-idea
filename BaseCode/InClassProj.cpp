@@ -1,5 +1,42 @@
-#include "InClassProj.h"
+//
+//***************************************************************************************
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <array>
+#include "d3dApp.h"
+#include "StateMachine.h"
+#include "d3dx11Effect.h"
+#include "MathHelper.h"
+#include "LightHelper.h"
+#include "Terrain.h"
+#include "ThirdPersonCam.h"
+#include "Vertex.h"
+#include "FontRasterizer.h"
+#include "Player.h"
+#include "Sprite.h"
+#include "Tile.h"
+#include "State.h"
+#include "Enemy.h"
+#include "Item.h"
+#include "Equipment.h"
+#include "Inventory.h"
+#include "TilePlacementState.h"
+#include "DrawTileCard.h"
+#include "BeginState.h"
 #include "BattleState.h"
+#include "PlayerTurnState.h"
+#include "StartTurnState.h"
+#include "EnemyTurnState.h"
+#include "GameOverState.h"
+#include "GameWonState.h"
+#include "xnacollision.h"
+#include "InClassProj.h"
+//#include "fmod.hpp"
+using namespace std;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	PSTR cmdLine, int showCmd)
@@ -23,7 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 
 
 InClassProj::InClassProj(HINSTANCE hInstance)
-: D3DApp(hInstance), mLitTexEffect(0), mMouseReleased(true), mCam(0), mHero(0), mTestTerrain(0), StateMachine()
+	: D3DApp(hInstance), StateMachine(), mLitTexEffect(0), mMouseReleased(true), mCam(0), mTestTerrain(0)
 {
 	XMVECTOR pos = XMVectorSet(1.0f, 1.0f, 5.0f, 0.0f);
 	XMVECTOR look = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
@@ -39,6 +76,20 @@ InClassProj::InClassProj(HINSTANCE hInstance)
 	XMStoreFloat4x4(&mProj, I);
 	XMStoreFloat4x4(&m2DProj, I);
 
+	mBegin = new BeginState((InClassProj*)this);
+	mTilePlacement = new TilePlacementState((InClassProj*)this);
+	mBattlePhase = new BattleState((InClassProj*)this);
+	mPlayerTurn = new PlayerTurnState((InClassProj*)this);
+	mEnemyTurn = new EnemyTurnState((InClassProj*)this);
+	mGameOver = new GameOverState((InClassProj*)this);
+	mGameWon = new GameWonState((InClassProj*)this);
+
+	mBegin->SetNextState(mTilePlacement);
+	mTilePlacement->SetNextState(mBattlePhase);
+	mBattlePhase->SetNextState(mTilePlacement);
+
+	mCurrState = mBegin;
+
 	srand((UINT)time(NULL));
 }
 
@@ -50,23 +101,17 @@ InClassProj::~InClassProj()
 	if (mTestTerrain)
 		delete mTestTerrain;
 
-//	if (mTiles)
-//		delete mTiles;
-
 	if (mLitTexEffect)
 		delete mLitTexEffect;
 
 	if (mHero)
 		delete mHero;
-
+	
 	if (mCam)
 		delete mCam;
 
 	if (m2DCam)
 		delete m2DCam;
-
-	//if (mParticleEffect)
-		//delete mParticleEffect;
 
 	if (mAdditiveBS)
 		ReleaseCOM(mAdditiveBS);
@@ -77,6 +122,8 @@ InClassProj::~InClassProj()
 	if (mNoDepthDS)
 		ReleaseCOM(mNoDepthDS);
 }
+
+
 
 void InClassProj::BuildSceneLights()
 {
@@ -138,9 +185,6 @@ bool InClassProj::Init()
 	mLitTexEffect = new LitTexEffect();
 	mLitTexEffect->LoadEffect(L"FX/lighting.fx", md3dDevice);
 
-	//mParticleEffect = new ParticleEffect();
-	//mParticleEffect->LoadEffect(L"FX/Particles.fx", md3dDevice);
-
 	Vertex::InitLitTexLayout(md3dDevice, mLitTexEffect->GetTech());
 
 	XMVECTOR pos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
@@ -178,23 +222,9 @@ bool InClassProj::Init()
 
 	
 	Vertex::InitTerrainVertLayout(md3dDevice, mTestTerrain->GetEffect()->GetTech());
-	//Vertex::InitParticleVertLayout(md3dDevice, mParticleEffect->GetTech());
-
-	//mSkyBox = new SkyBox(md3dDevice, 500.0f, L"Textures/sunsetcube1024.dds");
-//	BuildParticleVB();
-
-//	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/DarkParticle.png",
-//		0, 0, &mParticleTexture, 0);
 
 	BuildBlendStates();
 	BuildDSStates();
-
-	// Test Barns
-/*	Character* newBarn = new Character(XMVectorSet(5.0f, 0.0f, 5.0f, 0.0f),
-		XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
-		*mFarmModel);
-
-	mTestChars.push_back(newBarn);*/
 
 	ID3D11ShaderResourceView* font;
 	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/font.png",
@@ -203,70 +233,995 @@ bool InClassProj::Init()
 	mFont = new FontRasterizer(m2DCam, XMLoadFloat4x4(&m2DProj),
 		mLitTexEffect, 10, 10, font, md3dDevice);
 
-	Sprite::Frame* newFrame = new Sprite::Frame();
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	///CASTLE TILES
+
+	Tile::Frame* newTile = new Tile::Frame();
 	ID3D11ShaderResourceView* image;
-	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/WalkAnim.png",
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/TileSheet.png",
 		0, 0, &image, 0);
 
-	
-	newFrame->imageWidth = 2048;
-	newFrame->imageHeight = 512;
-	newFrame->x = 0;
-	newFrame->y = 0;
-	newFrame->image = image;
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 0;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 10;
 
-	std::vector<Sprite::Frame*> frames;
-	frames.push_back(newFrame);
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
 
-	newFrame = new Sprite::Frame();
-	newFrame->imageWidth = 2048;
-	newFrame->imageHeight = 512;
-	newFrame->x = 512;
-	newFrame->y = 0;
-	newFrame->image = image;
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 250;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 11;
 
-	frames.push_back(newFrame);
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
 
-	newFrame = new Sprite::Frame();
-	newFrame->imageWidth = 2048;
-	newFrame->imageHeight = 512;
-	newFrame->x = 1024;
-	newFrame->y = 0;
-	newFrame->image = image;
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 500;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 12;
 
-	frames.push_back(newFrame);
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
 
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 750;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 13;
 
-	Tile::Frame* newTileFrame = new Tile::Frame();
-	ID3D11ShaderResourceView* tileImage;
-	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/TestTexture.png", 0, 0, &tileImage, 0);
-	newTileFrame->imageWidth = 1024;
-	newTileFrame->imageHeight = 1024;
-	newTileFrame->x = 0;
-	newTileFrame->y = 0;
-	newTileFrame->image = tileImage;
-//	frames.push_back(newFrame);
-	mTileFrames.push_back(newTileFrame);
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
 
-	//mTestSprite = new Sprite(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);
-//the following line uses Player as though it inherits from the Sprite class and will not work with Rhyse's new code
-	mHero = new Player();//XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice
-	//pos, scale, frameWidth, frameHeight, depth, frames, frameRate, device
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1000;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 14;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1250;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 15;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1500;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 15;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1750;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 15;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2000;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 16;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2250;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 17;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2500;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 18;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2750;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 19;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3000;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 20;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3250;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 21;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3500;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 22;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3750;
+	newTile->y = 0;
+	newTile->image = image;
+	newTile->Terrain = 2;
+	newTile->Level = 5;
+	newTile->Direction = 23;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///FOREST TILES
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 0;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 10;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 250;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 11;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 500;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 12;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 750;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 13;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1000;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 14;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1250;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 15;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1500;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 16;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 1750;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 17;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2000;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 18;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2250;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 19;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2500;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 20;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 2750;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 21;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3000;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 22;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3250;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 23;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->x = 3500;
+	newTile->y = 250;
+	newTile->image = image;
+	newTile->Terrain = 1;
+	newTile->Level = 5;
+	newTile->Direction = 24;
+
+	TileLvl1.push_back(newTile);
+	TileLvl2.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Swamp///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	newTile = new Tile::Frame();//North
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 0;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 10;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//East
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 250;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 11;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//South
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 500;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 12;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 750;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 13;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 1000;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 14;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//South - East
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 1250;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 15;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//South - West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 1500;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 16;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 1750;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 17;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - South
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 2000;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 18;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//East -West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 2250;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 19;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East - South
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 2500;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 20;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//East - South - West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 2750;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 21;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - South - West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 3000;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 22;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East - West
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 3250;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 23;
+
+	TileLvl5.push_back(newTile);
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+
+	newTile = new Tile::Frame();//4 Way Tile
+	newTile->imageWidth = 3500;
+	newTile->imageHeight = 1000;
+	newTile->y = 500;
+	newTile->x = 3500;
+	newTile->image = image;
+	newTile->Terrain = 3;
+	newTile->Level = 9;
+	newTile->Direction = 24;
+
+	TileLvl3.push_back(newTile);
+	TileLvl4.push_back(newTile);
+	TileLvl5.push_back(newTile);
+
+	//Mountain Tiles ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	newTile = new Tile::Frame();//North
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 0;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 10;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//East
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 250;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 11;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//South
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 500;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 12;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 750;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 13;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 1000;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 14;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//South - East
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 1250;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 15;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//South - West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 1500;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 16;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 1750;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 17;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - South
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 2000;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 18;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//East -West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 2250;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 19;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East - South
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 2500;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 20;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//East - South - West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 2750;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 21;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - South - West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 3000;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 22;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//North - East - West
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 3250;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 23;
+
+	TileLvl5.push_back(newTile);
+
+	newTile = new Tile::Frame();//4 Way Tile
+	newTile->imageWidth = 3750;
+	newTile->imageHeight = 1000;
+	newTile->y = 750;
+	newTile->x = 3500;
+	newTile->image = image;
+	newTile->Terrain = 4;
+	newTile->Level = 9;
+	newTile->Direction = 24;
+
+	TileLvl5.push_back(newTile);
+
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	//result = sys->playSound(sound1, 0, false, &channel);
+	test = 0;
+	enemyHealth = 0;
+
+	Tile::Frame* homeTile = new Tile::Frame();
+	D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/TileSheet.png",
+		0, 0, &image, 0);
+	homeTile->imageWidth = 3750;
+	homeTile->imageHeight = 1000;
+	homeTile->x = 3500;
+	homeTile->y = 0;
+	homeTile->image = image;
+	homeTile->Terrain = 2;
+	homeTile->Level = 5;
+	homeTile->Direction = 24;
+	mTiles.push_back(homeTile);
+
+	board = new Tile**[250];
+	for (int i = 0; i < 250; ++i)
+	{
+		board[i] = new Tile*[250];
+		for (int j = 0; j < 250; ++j)
+		{
+			board[i][j] = NULL;
+		}
+
+	}
+	int homeCol = ((TilePlacementState*)mTilePlacement)->GetCurrCol();
+	int homeRow = ((TilePlacementState*)mTilePlacement)->GetCurrRow();
+	//int curCol = ((TilePlacementState*)mTilePlacement)->GetCurrCol();
+	//int curRow = ((TilePlacementState*)mTilePlacement)->GetCurrRow();
+
+	std::vector<Sprite::Frame*> homeTile2;
+	homeTile2.push_back(mTiles[0]);
+	//board[125][125] = new Tile(XMVectorSet((homeCol - 125) * 250, (homeRow - 125) * 250, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, homeTile, 1.0f, md3dDevice);
+	board[125][125] = new Tile(XMVectorSet(250.0f, 500.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, homeTile2, 1.0f, md3dDevice);
+
+	//TilePos.x = (curCol - 125) * 250;
+	//TilePos.y = (curRow - 125) * 250;
+
+	//std::vector<Sprite::Frame*> tile = ((StartTurnState*)mStartTurn)->GetTileVec();
+	//tile.push_back(mTiles[1]);
+	//TileToBePlaced = new Tile(XMVectorSet(TilePos.x, TilePos.y, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, md3dDevice);
+
+	//int currTile = board[curCol][curRow];
+
+	isPressed = false;
+
+	mHero = new Player();
 	((BattleState*)mBattlePhase)->SetPlayer(mHero);
 
 	mInventory = new Inventory();
 	((BattleState*)mBattlePhase)->SetInventory(mInventory);
 
-	mTestEnemy = new Basilisk();
+	mTestEnemy = new ArmoredPhesant();
 	((BattleState*)mBattlePhase)->SetEnemy(mTestEnemy);
-	
+
 	mInventory->createItemVectors();
 
-	//mTestSprite->Play(true);
-
-	//result = sys->playSound(sound1, 0, false, &channel);
-
 	return true;
+
+	
+}
+
+std::vector<Tile::Frame*> InClassProj::GetTileLvl1() const
+{
+	return TileLvl1;
+}
+std::vector<Tile::Frame*> InClassProj::GetTileLvl2() const
+{
+	return TileLvl2;
+}
+std::vector<Tile::Frame*> InClassProj::GetTileLvl3() const
+{
+	return TileLvl3;
+}
+std::vector<Tile::Frame*> InClassProj::GetTileLvl4() const
+{
+	return TileLvl4;
+}
+std::vector<Tile::Frame*> InClassProj::GetTileLvl5() const
+{
+	return TileLvl5;
+}
+
+Tile*** InClassProj::GetBoard() const
+{
+	return (Tile***)board;
 }
 
 void InClassProj::BuildBlendStates()
@@ -293,10 +1248,6 @@ void InClassProj::BuildBlendStates()
 	HR(md3dDevice->CreateBlendState(&bsDesc, &mTransparentBS));
 }
 
-Tile InClassProj::GetTile()
-{
-	return Tile;
-}
 void InClassProj::BuildDSStates()
 {
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -356,7 +1307,10 @@ void InClassProj::OnResize()
 float timer = 0.0f;
 void InClassProj::UpdateScene(float dt)
 {
-	UpdateKeyboardInput(dt);
+	((TilePlacementState*)mTilePlacement)->Init();
+	mCurrState->Init();
+	mCurrState->Update(dt);
+
 	RECT screenRect;
 	screenRect.left = 0;
 	screenRect.right = mClientWidth;
@@ -364,41 +1318,9 @@ void InClassProj::UpdateScene(float dt)
 	screenRect.bottom = mClientHeight;
 	//ClipCursor(&screenRect);
 
-
 	std::vector<Sprite::Frame*> frames;
 
-	//XMVECTOR camPos = mCam->GetPos();
-
-	//camPos = XMVectorSet(camPos.m128_f32[0], mTestTerrain->GetHeight(camPos.m128_f32[0],
-	//camPos.m128_f32[2]) + 4.0f,
-	//camPos.m128_f32[2], 1.0f);
-
-	//mCam->SetPos(camPos);
-//	mHero->AddForce(XMVectorSet(0.0f, -20.0f * dt, 0.0f, 0.0f));
-
-//	mHero->Update(dt);
-//	mTiles->Update(dt);
-
-
-	/*XMVECTOR playerPos = mTestSprite->GetPos();
-	XMVECTOR toPlayer = playerPos - mCam->GetPos();
-	toPlayer = XMVector3Normalize(toPlayer);
-	mCam->SetFacing(toPlayer, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	mCam->SetPos(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
-	mCam->SetFacing(XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
-	mCam->Update();*/
-
 	m2DCam->Update();
-
-//	XMStoreFloat3(&mSpotLight.pos, mCam->GetPos());
-//	XMStoreFloat3(&mSpotLight.direction, mCam->GetLook());
-
-	//mCurrState->Update(dt);
-//	UpdateParticleVB();
-
-//	mTestSprite->Update(dt);
-
-	//sys->update();
 }
 
 void InClassProj::DrawScene()
@@ -448,25 +1370,89 @@ void InClassProj::DrawScene()
 	vp = vp * view * proj;
 
 	//mTestTerrain->Draw(md3dImmediateContext, vp);
-	
-	std::stringstream ss;
-	ss << mHero->GetPlayerAttack();
-	string s = ss.str();
+	mCurrState->Draw(vp, md3dImmediateContext, mLitTexEffect);
+
+	std::stringstream ssPlayerHealth;
+	ssPlayerHealth << "Player Health";
+	string sPlayerHealth = ssPlayerHealth.str();
+
+	std::stringstream ss1;
+	ss1 << mHero->GetPlayerHealth();
+	string s1 = ss1.str();
+
+	std::stringstream ssEnemyHealth;
+	ssEnemyHealth << "Enemy Health";
+	string sEnemyHealth = ssEnemyHealth.str();
+
+	std::stringstream ss2;
+	ss2 << mTestEnemy->GetEnemyHealth();
+	string s2 = ss2.str();
+
+	std::stringstream ssPlayerAttack;
+	ssPlayerAttack << "Player Damage";
+	string sPlayerAttack = ssPlayerAttack.str();
+
+	std::stringstream ss3;
+	ss3 << mHero->GetPlayerAttack();
+	string s3 = ss3.str();
+
+	std::stringstream ssPlayerEvade;
+	ssPlayerEvade << "Player Evade";
+	string sPlayerEvade = ssPlayerEvade.str();
+
+	std::stringstream ss4;
+	ss4 << mHero->GetPlayerEvade();
+	string s4 = ss4.str();
+
+	//string sItemsDisplay = mHero->DisplayItems().str();
 		
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
 	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, s);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 600.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerHealth);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, s1);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 525.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyHealth);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 50, 15, s2);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 450.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerAttack);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 425.0f, 0.0f, 0.0f), 50, 50, 15, s3);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 375.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerEvade);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 350.0f, 0.0f, 0.0f), 50, 50, 15, s4);
+
+	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 50, 50, 15, sItemsDisplay);
 	md3dImmediateContext->OMSetDepthStencilState(0, 0);
 	md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	HR(mSwapChain->Present(1, 0));
+
 }
+
+void InClassProj::ItemMenu()
+{
+	//string sItemsDisplay = mHero->DisplayItems().str();
+	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 15, sItemsDisplay);
+}
+
+int InClassProj::GetXPos()
+{
+	return mLastMousePos.x;
+}
+
+int InClassProj::GetYPos()
+{
+	return mLastMousePos.y;
+}
+
+FontRasterizer* InClassProj::GetFont()
+{
+	return mFont;
+}
+
 
 void InClassProj::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
+
 	if ((btnState & MK_RBUTTON) != 0)
 	{
 		
@@ -509,152 +1495,30 @@ void InClassProj::UpdateKeyboardInput(float dt)
 {
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
-		/*bool isPlaying = false;
-		channel->isPlaying(&isPlaying);
-		if(!isPlaying)
-		{
-		result = sys->playSound(sound1, 0, false, &channel);
-		}*/
-		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
-		{
-			
-		}
-		else
-		{
-			//for (int i = 0; i < mTiles.size(); ++i)
-			//{
 
-			//	mTiles[i]->MoveRight(100.0f);
-			//}
-		}
 	}
+
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		mHero->Attack(mTestEnemy);
-		if (mTestEnemy->GetEnemyHealth() <= 0)
-		{
-			int level = mTestEnemy->GetEnemyLevel();
-			mTestEquip = mInventory->SelectEquip(level);
-			mTestItem = mInventory->SelectItem(level);
-			mHero->GetEquipment(mHero, mTestEquip);
-			mHero->GetItem(mTestItem);
-			//delete mTestEnemy;
-		}
-		//else
-		//{
-		mTestEnemy->Attack(mHero);
-		//}
-		//if (mHero->GetPlayerHealth() <= 0)
-		//{
-		//	delete mHero;
-		//}
+
 	}
 
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
 
+	}
+
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+
+
+	}
+	if (GetAsyncKeyState('P') & 0x8000)
+	{
+
+	}
 }
-
-
-//For reference to States, this is not for actual use::: 
-/*switch (mCurrentGameState)
+Sprite::Frame* InClassProj::GetTile()
 {
-case gs_START:
-//place Home Tile
-//Maybe show instructions
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Start Phase");
-mCurrentGameState = gs_DRAWPHASE;
-break;
-
-case gs_DRAWPHASE:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Draw Phase");
-for (int i = 0; i < mTiles.size(); ++i)
-{
-mTiles[i] = new Tile(XMVectorSet(mClientWidth / 2.0f, mClientHeight / 2.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), 512, 512, 0.1f, frames, 0.25f, md3dDevice);//DrawTile();
+	return mTiles[0];
 }
-
-
-//mCurrentGameState = gs_TILEPLACEMENT;
-mCurrentGameState = gs_START;
-break;
-
-case gs_TILEPLACEMENT:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Tile placement");
-//Tile move and placement code
-
-mCurrentGameState = gs_PLAYERMOVE;
-break;
-
-case gs_PLAYERMOVE:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Player Move Phase");
-//Check to see if the player pauses at any point, and if so:
-mCurrentGameState = gs_HANDMENU;
-
-//player move code
-
-//encounter code
-//check for encounter
-//if no encounter then:
-
-mCurrentGameState = gs_ENEMYPHASE;
-
-//if ecounter then:
-mCurrentGameState = gs_BATTLEPHASE;
-break;
-
-case gs_BATTLEPHASE:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Battle Phase");
-//Check if Tile Explored
-//if explored then check for chance of a monster
-//if monster check passes then check the level and terrain of the tile entered
-//if unexplored:
-//Check level and terrain of tile entered
-//monster chooser and spawn code
-//BATTLE CODE
-//Check if Battle won, if true then:
-mCurrentGameState = gs_LOOTPHASE;
-//else the player ran away in which case
-mCurrentGameState = gs_ENEMYPHASE;
-//else check for Loss and if true:
-mCurrentGameState = gs_GAMEOVER;
-break;
-
-case gs_LOOTPHASE:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Loot Phase");
-//Check level of defeated enemy
-//Check if enemy was boss
-//If Boss: Give Player the Boss Item
-//If no Boss: Spawn items according to Level of enemy
-
-//Move Player Sprite into new Tile
-
-//Check if Player still has moves left
-//if yes then
-mCurrentGameState = gs_PLAYERMOVE;
-
-//if not then:
-mCurrentGameState = gs_ENEMYPHASE;
-break;
-
-case gs_ENEMYPHASE:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Enemy Phase");
-//Stalker Spawn, check, and move code
-
-mCurrentGameState = gs_DRAWPHASE;
-break;
-
-case gs_HANDMENU:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Hand Menu");
-//all of the game menu code involving the hand and equpiment go here
-//the return button will:
-
-mCurrentGameState = gs_PLAYERMOVE;
-break;
-
-case gs_MAINMENU:
-//Ignore MAINMENU for now as it isn't needed in the Prototype
-break;
-
-case gs_GAMEOVER:
-mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 75, 10, "Game Over");
-//end the game
-break;
-}*/
