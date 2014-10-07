@@ -41,5 +41,6 @@ private:
 	TilePlacementState* mPlace;
 	int col;
 	int row;
+	std::vector<Sprite::Frame*> mPlayerTile;
 };
 

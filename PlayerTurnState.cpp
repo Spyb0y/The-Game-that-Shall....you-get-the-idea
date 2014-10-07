@@ -5,12 +5,31 @@
 void PlayerTurnState::Init()
 {
 	mPlace = new TilePlacementState(mStateMachine);
-	std::vector<Tile::Frame*> pTile = ((InClassProj*)mStateMachine)->GetPlayerTile();
+	
 	col = mPlace->GetCurrCol();
 	row = mPlace->GetCurrRow();
+
+	Tile::Frame* playerTile = new Tile::Frame();
+	ID3D11ShaderResourceView* image;
+	D3DX11CreateShaderResourceViewFromFile(mStateMachine->GetDevice(), L"Textures/playerTile.png",
+		0, 0, &image, 0);
+	playerTile->imageWidth = 250;
+	playerTile->imageHeight = 250;
+	playerTile->x = 0;
+	playerTile->y = 0;
+	playerTile->image = image;
+	playerTile->Terrain = 2;
+	playerTile->Level = 5;
+	playerTile->Direction = 24;
+	playerTile->isUp = true;
+	playerTile->isDown = true;
+	playerTile->isLeft = true;
+	playerTile->isRight = true;
+	mPlayerTile.push_back(playerTile);
+
 	PlayerPos.x = (col - 125) * 250;
 	PlayerPos.y = (row - 125) * 250;
-	PlayerTile = new Tile(XMVectorSet(PlayerPos.x, PlayerPos.y, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, pTile, 1.0f, mStateMachine->GetDevice());
+	PlayerTile = new Tile(XMVectorSet(PlayerPos.x, PlayerPos.y, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, mPlayerTile, 1.0f, mStateMachine->GetDevice());
 }
 
 void PlayerTurnState::Update(float dt)
