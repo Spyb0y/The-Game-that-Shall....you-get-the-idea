@@ -43,7 +43,29 @@ public:
 	std::vector<Item*> ItemsLv5;
 	Item* SelectItem(int);
 
+	//create enemy vectors
+	//castle enemies
+	std::vector<Enemy*> CastleEnemies;
+	//forest enemies
+	std::vector<Enemy*> ForestEnemies;
+	//mountain enemies
+	std::vector<Enemy*> MountainEnemies;
+	//swamp enemies
+	std::vector<Enemy*> SwampEnemies;
+	//boss enemies
+	std::vector<Enemy*> BossEnemies;
+	//first element is stalker
+	//second element is minotaur
+	//third element is stone guardian
+	//fourth element is gargoyle
+	//fifth element is queen hornet
+	//sixth elemnt is rad dragon
+	void CreateEnemyVectors();
 
+	int GetForestSize();
+	int GetCastleSize();
+	int GetSwampSize();
+	int GetMountainSize();
 private:
 
 };

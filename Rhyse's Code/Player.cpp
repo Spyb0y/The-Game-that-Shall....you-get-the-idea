@@ -128,7 +128,10 @@ void Player::UseItem(int i, Player* mHero)
 
 void Player::ResetStats(int i, Player* mHero)
 {
-	mHero->mHealth = mHero->mHealth - playerHand[i]->GetItemHeal();
+	if (mHero->mHealth >= 10)
+	{
+		mHero->mHealth = 10;
+	}
 	mHero->mDamage = mHero->mDamage - playerHand[i]->GetItemDamage();
 	mHero->mEvade = mHero->mEvade - playerHand[i]->GetItemEvade();
 }

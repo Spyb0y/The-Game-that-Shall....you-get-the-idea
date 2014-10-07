@@ -236,6 +236,110 @@ void Inventory::createItemVectors()
 	ItemsLv5.push_back(BloodD);
 }
 
+void Inventory::CreateEnemyVectors()
+{
+	//create the pointers to the enemies
+	Enemy* mRat = new Rat();
+	Enemy* mPheasent = new Pheasent();
+	Enemy* mArmoredPhesant = new ArmoredPhesant();
+	Enemy* mGiantRat = new GiantRat();
+	Enemy* mWarHound = new WarHound();
+	Enemy* mGiantBeetle = new GiantBeetle();
+	Enemy* mGiantWasp = new GiantWasp();
+	Enemy* mStoneGolem = new StoneGolem();
+	Enemy* mGorgon = new Gorgon();
+	Enemy* mGiantEagle = new GiantEagle();
+	Enemy* mTroll = new Troll;
+	Enemy* mCrocodile = new Crocodile();
+	Enemy* mDeviousPenguin = new DeviousPenguin();
+	Enemy* mBasilisk = new Basilisk();
+	Enemy* mOgre = new Ogre();
+	Enemy* mDragon = new Dragon();
+	Enemy* mTheKing’sRoyalGuard = new TheKing’sRoyalGuard();
+
+	//boss monster pointers
+	
+	Enemy* mMinotaur = new Minotaur(); // boss 1
+	Enemy* mStoneGuardian = new StoneGuardian();//boss 2
+	Enemy* mGargoyle = new Gargoyle();//boss 3
+	Enemy* mHornetQueen = new HornetQueen();//boss 4
+	Enemy* mRadDragon = new RadDragon();//boss 5
+	Enemy* mStalker = new TheStalker();//boss 0
+	
+
+	//push the pointers into the correct arrays
+	//castle vector
+	CastleEnemies.push_back(mRat);
+	CastleEnemies.push_back(mPheasent);
+	CastleEnemies.push_back(mArmoredPhesant);
+	CastleEnemies.push_back(mGiantRat);
+	CastleEnemies.push_back(mWarHound);
+	CastleEnemies.push_back(mGiantEagle);
+	CastleEnemies.push_back(mTheKing’sRoyalGuard);
+	CastleEnemies.push_back(mDeviousPenguin);
+
+	//forest vector
+	ForestEnemies.push_back(mRat);
+	ForestEnemies.push_back(mGiantRat);
+	ForestEnemies.push_back(mWarHound);
+	ForestEnemies.push_back(mGiantBeetle);
+	ForestEnemies.push_back(mGiantWasp);
+	ForestEnemies.push_back(mTroll);
+	ForestEnemies.push_back(mGiantEagle);
+	ForestEnemies.push_back(mOgre);
+
+	//mountain vector
+	MountainEnemies.push_back(mStoneGolem);
+	MountainEnemies.push_back(mGiantEagle);
+	MountainEnemies.push_back(mTroll);
+	MountainEnemies.push_back(mBasilisk);
+	MountainEnemies.push_back(mOgre);
+	MountainEnemies.push_back(mDragon);
+	MountainEnemies.push_back(mDeviousPenguin);
+
+	//swamp vector
+	SwampEnemies.push_back(mGiantRat);
+	SwampEnemies.push_back(mGorgon);
+	SwampEnemies.push_back(mTroll);
+	SwampEnemies.push_back(mCrocodile);
+	SwampEnemies.push_back(mBasilisk);
+	SwampEnemies.push_back(mDeviousPenguin);
+
+	//boss vector
+	//first element is stalker
+	BossEnemies.push_back(mStalker);
+	//second element is minotaur
+	BossEnemies.push_back(mMinotaur);
+	//third element is stone guardian
+	BossEnemies.push_back(mStoneGuardian);
+	//fourth element is gargoyle
+	BossEnemies.push_back(mGargoyle);
+	//fifth element is queen hornet
+	BossEnemies.push_back(mHornetQueen);
+	//sixth elemnt is rad dragon
+	BossEnemies.push_back(mRadDragon);
+
+}
+
+int Inventory::GetForestSize()
+{
+	return ForestEnemies.size();
+}
+
+int Inventory::GetCastleSize()
+{
+	return CastleEnemies.size();
+}
+
+int Inventory::GetSwampSize()
+{
+	return SwampEnemies.size();
+}
+
+int Inventory::GetMountainSize()
+{
+	return MountainEnemies.size();
+}
 
 
 

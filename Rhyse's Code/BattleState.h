@@ -1,20 +1,29 @@
 #pragma once
+#include <vector>
 #include "State.h"
 #include "InClassProj.h"
 #include "FontRasterizer.h"
+#include "TilePlacementState.h"
+#include "Sprite.h"
+#include "Tile.h"
+
+class Inventory;
 
 class BattleState : public State
 {
 public:
-	BattleState(StateMachine* stateMachine) : State(stateMachine)
+	BattleState(InClassProj* stateMachine) : State(stateMachine)
 	{
 		Next = false;
-		isAPressed = false;
+		isLClicked = false;
+		drawMenu = false;
+		selectItemState = false;
 	}
 	virtual ~BattleState()
 	{
 		delete mNextState;
 	}
+	void Init();
 	void Update(float dt);
 	void Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect);
 	void SetPlayer(Player*);
@@ -32,15 +41,26 @@ private:
 	FontRasterizer* mFont;
 
 	bool Next;
-	bool isAPressed;
 	bool isLClicked;
 
 	//test code
 	Enemy* mTestEnemy;
 
 	ID3D11DeviceContext* md3dImmediateContext;
+	ID3D11Device* md3dDevice;
+
+	Sprite::Frame* mBattleScreen;
+	Tile* mScreenToDraw;
+
+	std::vector<Tile::Frame*>mBattleScreenVector;
 
 private:
-	void DrawItemMenu();
+	Enemy* SpawnEnemy();
+	void SpawnBoss();
+	void DrawItemMenu(ID3D11DeviceContext* context);
+	int PlayerSelectItem();
+
+	bool drawMenu;
+	bool selectItemState;
 };
 
