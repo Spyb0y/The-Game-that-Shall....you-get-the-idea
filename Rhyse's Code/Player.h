@@ -41,11 +41,9 @@ public:
 	void SetPlayerHealth(int);
 	int GetPlayerEvade();
 	unsigned GetPlayerDefense();
+	int GetPlayerAttack();
 
 	std::stringstream DisplayItems();
-
-	//test code
-	int GetPlayerAttack();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
 	void GetItem(Item* newItem);

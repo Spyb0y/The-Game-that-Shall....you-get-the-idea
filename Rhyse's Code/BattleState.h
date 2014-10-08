@@ -44,10 +44,12 @@ private:
 	bool isLClicked;
 
 	//test code
-	Enemy* mTestEnemy;
+	Enemy* mEnemy;
 
 	ID3D11DeviceContext* md3dImmediateContext;
 	ID3D11Device* md3dDevice;
+	ID3D11BlendState* mTransparentBS;
+	ID3D11DepthStencilState* mFontDS;
 
 	Sprite::Frame* mBattleScreen;
 	Tile* mScreenToDraw;

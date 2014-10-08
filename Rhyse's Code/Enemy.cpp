@@ -1,18 +1,25 @@
+#include <sstream>
 #include "Enemy.h"
 #include "Player.h"
 
-Enemy::Enemy(float health, int damage, int level)
+Enemy::Enemy(float health, int damage, int level) : type(0)
 {
-}
 
+}
 
 Enemy::~Enemy()
 {
 }
 
+const int Enemy::GetEnemyType()
+{
+	return type;
+}
+
 ArmoredPhesant::ArmoredPhesant() :
 MAX_HIT(25),
-MIN_HIT(5)
+MIN_HIT(5),
+type(1)
 {
 	mHealth = 15;
 	mDamage = 3;
@@ -67,9 +74,15 @@ bool ArmoredPhesant::GetIsBoss()
 	return isBoss;
 }
 
+const int ArmoredPhesant::GetEnemyType()
+{
+	return type;
+}
+
 Basilisk::Basilisk() :
 MAX_HIT(15),
-MIN_HIT(5)
+MIN_HIT(5),
+type(2)
 {
 	mHealth = 60;
 	mDamage = 4;
@@ -127,9 +140,15 @@ bool Basilisk::GetIsBoss()
 	return isBoss;
 }
 
+const int Basilisk::GetEnemyType()
+{
+	return type;
+}
+
 Crocodile::Crocodile() :
 MAX_HIT(25),
-MIN_HIT(6)
+MIN_HIT(6),
+type(3)
 {
 	mHealth = 20;
 	mDamage = 5;
@@ -187,9 +206,15 @@ bool Crocodile::GetIsBoss()
 	return isBoss;
 }
 
+const int Crocodile::GetEnemyType()
+{
+	return type;
+}
+
 DeviousPenguin::DeviousPenguin() :
 MAX_HIT(2),
-MIN_HIT(1)
+MIN_HIT(1),
+type(4)
 {
 	mHealth = 10;
 	mDamage = 1;
@@ -239,9 +264,15 @@ bool DeviousPenguin::GetIsBoss()
 	return isBoss;
 }
 
+const int DeviousPenguin::GetEnemyType()
+{
+	return type;
+}
+
 Dragon::Dragon() :
 MAX_HIT(30),
-MIN_HIT(6)
+MIN_HIT(6),
+type(5)
 {
 	mHealth = 50;
 	mDamage = 7;
@@ -299,10 +330,16 @@ bool Dragon::GetIsBoss()
 	return isBoss;
 }
 
+const int Dragon::GetEnemyType()
+{
+	return type;
+}
+
 //Boss
 HornetQueen::HornetQueen() :
 MAX_HIT(50),
-MIN_HIT(5)
+MIN_HIT(5),
+type(6)
 {
 	mHealth = 100;
 	mDamage = 25;
@@ -352,10 +389,16 @@ bool HornetQueen::GetIsBoss()
 	return isBoss;
 }
 
+const int HornetQueen::GetEnemyType()
+{
+	return type;
+}
+
 //Boss
 Gargoyle::Gargoyle() :
 MAX_HIT(50),
-MIN_HIT(1)
+MIN_HIT(1),
+type(7)
 {
 	mHealth = 75;
 	mDamage = 20;
@@ -406,9 +449,15 @@ bool Gargoyle::GetIsBoss()
 	return isBoss;
 }
 
+const int Gargoyle::GetEnemyType()
+{
+	return type;
+}
+
 GiantBeetle::GiantBeetle() :
 MAX_HIT(20),
-MIN_HIT(0)
+MIN_HIT(0),
+type(8)
 {
 	mHealth = 4;
 	mDamage = 1;
@@ -458,9 +507,15 @@ bool GiantBeetle::GetIsBoss()
 	return isBoss;
 }
 
+const int GiantBeetle::GetEnemyType()
+{
+	return type;
+}
+
 GiantEagle::GiantEagle() :
 MAX_HIT(20),
-MIN_HIT(6)
+MIN_HIT(6),
+type(9)
 {
 	mHealth = 20;
 	mDamage = 6;
@@ -518,9 +573,15 @@ bool GiantEagle::GetIsBoss()
 	return isBoss;
 }
 
+const int GiantEagle::GetEnemyType()
+{
+	return type;
+}
+
 GiantRat::GiantRat() :
 MAX_HIT(25),
-MIN_HIT(5)
+MIN_HIT(5),
+type(10)
 {
 	mHealth = 10;
 	mDamage = 3;
@@ -578,9 +639,15 @@ bool GiantRat::GetIsBoss()
 	return isBoss;
 }
 
+const int GiantRat::GetEnemyType()
+{
+	return type;
+}
+
 GiantWasp::GiantWasp() :
 MAX_HIT(25),
-MIN_HIT(8)
+MIN_HIT(8),
+type(11)
 {
 	mHealth = 14;
 	mDamage = 1;
@@ -638,9 +705,16 @@ bool GiantWasp::GetIsBoss()
 	return isBoss;
 }
 
+const int GiantWasp::GetEnemyType()
+{
+	return type;
+}
+
+
 Gorgon::Gorgon() :
 MAX_HIT(40),
-MIN_HIT(4)
+MIN_HIT(4),
+type(12)
 {
 	mHealth = 25;
 	mDamage = 5;
@@ -698,10 +772,16 @@ bool Gorgon::GetIsBoss()
 	return isBoss;
 }
 
+const int Gorgon::GetEnemyType()
+{
+	return type;
+}
+
 //Boss
 Minotaur::Minotaur() :
 MAX_HIT(25),
-MIN_HIT(1)
+MIN_HIT(1),
+type(13)
 {
 	mHealth = 30;
 	mDamage = 10;
@@ -751,9 +831,15 @@ bool Minotaur::GetIsBoss()
 	return isBoss;
 }
 
+const int Minotaur::GetEnemyType()
+{
+	return type;
+}
+
 Ogre::Ogre() :
 MAX_HIT(30),
-MIN_HIT(6)
+MIN_HIT(6),
+type(14)
 {
 	mHealth = 30;
 	mDamage = 6;
@@ -811,9 +897,15 @@ bool Ogre::GetIsBoss()
 	return isBoss;
 }
 
+const int Ogre::GetEnemyType()
+{
+	return type;
+}
+
 Pheasent::Pheasent() :
 MAX_HIT(20),
-MIN_HIT(0)
+MIN_HIT(0),
+type(15)
 {
 	mHealth = 10;
 	mDamage = 2;
@@ -863,10 +955,16 @@ bool Pheasent::GetIsBoss()
 	return isBoss;
 }
 
+const int Pheasent::GetEnemyType()
+{
+	return type;
+}
+
 //Boss
 RadDragon::RadDragon() :
 MAX_HIT(80),
-MIN_HIT(10)
+MIN_HIT(10),
+type(16)
 {
 	mHealth = 150;
 	mDamage = 25;
@@ -924,9 +1022,15 @@ bool RadDragon::GetIsBoss()
 	return isBoss;
 }
 
+const int RadDragon::GetEnemyType()
+{
+	return type;
+}
+
 Rat::Rat() :
 MAX_HIT(20),
-MIN_HIT(0)
+MIN_HIT(0),
+type(17)
 {
 	mHealth = 5;
 	mDamage = 2;
@@ -976,9 +1080,15 @@ bool Rat::GetIsBoss()
 	return isBoss;
 }
 
+const int Rat::GetEnemyType()
+{
+	return type;
+}
+
 StoneGolem::StoneGolem() :
 MAX_HIT(15),
-MIN_HIT(5)
+MIN_HIT(5),
+type(18)
 {
 	mHealth = 40;
 	mDamage = 3;
@@ -1033,10 +1143,16 @@ bool StoneGolem::GetIsBoss()
 	return isBoss;
 }
 
+const int StoneGolem::GetEnemyType()
+{
+	return type;
+}
+
 //Boss
 StoneGuardian::StoneGuardian() :
 MAX_HIT(30),
-MIN_HIT(1)
+MIN_HIT(1),
+type(19)
 {
 	mHealth = 50;
 	mDamage = 15;
@@ -1086,9 +1202,15 @@ bool StoneGuardian::GetIsBoss()
 	return isBoss;
 }
 
+const int StoneGuardian::GetEnemyType()
+{
+	return type;
+}
+
 TheKing’sRoyalGuard::TheKing’sRoyalGuard() :
 MAX_HIT(30),
-MIN_HIT(3)
+MIN_HIT(3),
+type(20)
 {
 	mHealth = 70;
 	mDamage = 5;
@@ -1143,9 +1265,15 @@ bool TheKing’sRoyalGuard::GetIsBoss()
 	return isBoss;
 }
 
+const int TheKing’sRoyalGuard::GetEnemyType()
+{
+	return type;
+}
+
 TheStalker::TheStalker() :
 MAX_HIT(110),
-MIN_HIT(30)
+MIN_HIT(30),
+type(21)
 {
 	mHealth = 300;
 	mDamage = 66;
@@ -1200,9 +1328,15 @@ bool TheStalker::GetIsBoss()
 	return isBoss;
 }
 
+const int TheStalker::GetEnemyType()
+{
+	return type;
+}
+
 Troll::Troll() :
 MAX_HIT(30),
-MIN_HIT(5)
+MIN_HIT(5),
+type(22)
 {
 	mHealth = 20;
 	mDamage = 5;
@@ -1257,9 +1391,15 @@ bool Troll::GetIsBoss()
 	return isBoss;
 }
 
+const int Troll::GetEnemyType()
+{
+	return type;
+}
+
 WarHound::WarHound() :
 MAX_HIT(20),
-MIN_HIT(8)
+MIN_HIT(8),
+type(23)
 {
 	mHealth = 20;
 	mDamage = 4;
@@ -1312,6 +1452,11 @@ int WarHound::GetEnemyLevel()
 	return mLevel;
 }
 
+const int WarHound::GetEnemyType()
+{
+	return type;
+}
+
 bool WarHound::GetIsBoss()
 {
 	return isBoss;
@@ -1357,6 +1502,131 @@ int Enemy::FireBreath(int mDamage)
 {
 	mDamage += 20;
 	return mDamage;
+}
+
+std::stringstream Enemy::DisplayEnemy(Enemy* enemy)
+{
+	std::stringstream ss;
+	if (enemy->GetEnemyType() == 1)
+	{
+		ss << "Armored Phesant";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 2)
+	{
+		ss << "Basilisk";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 3)
+	{
+		ss << "Crocodile";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 4)
+	{
+		ss << "Devious Penguin";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 5)
+	{
+		ss << "Dragon";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 6)
+	{
+		ss << "Hornet Queen";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 7)
+	{
+		ss << "Gargoyle";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 8)
+	{
+		ss << "Giant Beetle";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 9)
+	{
+		ss << "Giant Eagle";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 10)
+	{
+		ss << "Giant Rat";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 11)
+	{
+		ss << "Giant Wasp";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 12)
+	{
+		ss << "Gorgon";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 13)
+	{
+		ss << "Minotaur";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 14)
+	{
+		ss << "Ogre";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 15)
+	{
+		ss << "Pheasent";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 16)
+	{
+		ss << "Rad Dragon";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 17)
+	{
+		ss << "Rat";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 18)
+	{
+		ss << "Stone Golem";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 19)
+	{
+		ss << "Stone Guardian";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 20)
+	{
+		ss << "The King’s Royal Guard";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 21)
+	{
+		ss << "The Stalker";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 22)
+	{
+		ss << "Troll";
+		return ss;
+	}
+	else if (enemy->GetEnemyType() == 23)
+	{
+		ss << "War Hound";
+		return ss;
+	}
+	else
+	{
+		ss << "error";
+		return ss;
+	}
 }
 
 

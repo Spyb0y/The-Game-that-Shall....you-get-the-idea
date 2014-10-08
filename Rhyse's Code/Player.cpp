@@ -58,7 +58,6 @@ unsigned Player::GetPlayerDefense()
 	return mDefense;
 }
 
-//testCode
 int Player::GetPlayerAttack()
 {
 	return mDamage;
@@ -66,37 +65,37 @@ int Player::GetPlayerAttack()
 
 std::stringstream Player::DisplayItems()
 {
-	std::stringstream ss;
+	std::stringstream ss;                        //21 + 22 = 43 for font rasterizer
 	int i = 0;
 	while (i < playerHand.size())
 	{
 		if (playerHand[i]->GetItemType() == Item::Type::_Potion)
 		{
-			ss << "Select " << i << " to use your Small Health Potion";
+			ss << "Select " << i << " to use your Small Health Potion   ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_MPotion)
 		{
-			ss << "Select " << i << " to use your Medium Health Potion";
+			ss << "Select " << i << " to use your Medium Health Potion  ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_FireBall)
 		{
-			ss << "Select " << i << " to use your Fireball";
+			ss << "Select " << i << " to use your Fireball              ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_LPotion)
 		{
-			ss << "Select " << i << " to use your Large Health Potion";
+			ss << "Select " << i << " to use your Large Health Potion   ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_Flaggon)
 		{
-			ss << "Select " << i << " to use your Flagon of Mead";
+			ss << "Select " << i << " to use your Flagon of Mead        ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_Maiden)
 		{
-			ss << "Select " << i << " to use your Voluptuous Maiden";
+			ss << "Select " << i << " to use your Voluptuous Maiden     ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_SPPotion)
 		{
-			ss << "Select " << i << " to use your Super Health Potion";
+			ss << "Select " << i << " to use your Super Health Potion   ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_BloodR)
 		{
@@ -104,11 +103,11 @@ std::stringstream Player::DisplayItems()
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_UPPotion)
 		{
-			ss << "Select " << i << " to use your Ultra Health Potion";
+			ss << "Select " << i << " to use your Ultra Health Potion   ";
 		}
 		else if (playerHand[i]->GetItemType() == Item::Type::_BloodD)
 		{
-			ss << "Select " << i << " to use your Blood of the Damned";
+			ss << "Select " << i << " to use your Blood of the Damned   ";
 		}
 		else
 		{
@@ -147,7 +146,12 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 	{
 		armourInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (armourInventory.size() > mMaxArmourSlots)
+		int j = 0;
+		for (int i = 0; i < armourInventory.size(); ++i)
+		{ 
+			j += armourInventory[i]->Size;
+		}
+		if (j > mMaxArmourSlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, armourInventory[armourInventory.size() - 1]);
@@ -159,7 +163,12 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 	{
 		weaponInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (weaponInventory.size() > mMaxWeaponSlots)
+		int j = 0;
+		for (int i = 0; i < weaponInventory.size(); ++i)
+		{
+			j += weaponInventory[i]->Size;
+		}
+		if (j > mMaxWeaponSlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, weaponInventory[weaponInventory.size() - 1]);
@@ -171,7 +180,12 @@ void Player::GetEquipment(Player* mHero, Equipment* newItem)
 	{
 		accessoryInventory.push_back(newItem);
 		AddPlayerStats(mHero, newItem);
-		if (accessoryInventory.size() > mMaxAccessorySlots)
+		int j = 0;
+		for (int i = 0; i < accessoryInventory.size(); ++i)
+		{
+			j += accessoryInventory[i]->Size;
+		}
+		if (j > mMaxAccessorySlots)
 		{
 			//ask player to remove an item
 			DeletePlayerStats(mHero, accessoryInventory[accessoryInventory.size() - 1]);

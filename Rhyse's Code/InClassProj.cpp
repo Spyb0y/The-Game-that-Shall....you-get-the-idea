@@ -1220,11 +1220,6 @@ Tile*** InClassProj::GetBoard() const
 	return (Tile***)board;
 }
 
-ID3D11Device* InClassProj::GetDevice()
-{
-	return md3dDevice;
-}
-
 void InClassProj::BuildBlendStates()
 {
 	D3D11_BLEND_DESC bsDesc = { 0 };
@@ -1373,51 +1368,11 @@ void InClassProj::DrawScene()
 	//mTestTerrain->Draw(md3dImmediateContext, vp);
 	mCurrState->Draw(vp, md3dImmediateContext, mLitTexEffect);
 
-	std::stringstream ssPlayerHealth;
-	ssPlayerHealth << "Player Health";
-	string sPlayerHealth = ssPlayerHealth.str();
-
-	std::stringstream ss1;
-	ss1 << mHero->GetPlayerHealth();
-	string s1 = ss1.str();
-
-	std::stringstream ssEnemyHealth;
-	ssEnemyHealth << "Enemy Health";
-	string sEnemyHealth = ssEnemyHealth.str();
-
-	//std::stringstream ss2;
-	//ss2 << mTestEnemy->GetEnemyHealth();
-	//string s2 = ss2.str();
-
-	std::stringstream ssPlayerAttack;
-	ssPlayerAttack << "Player Damage";
-	string sPlayerAttack = ssPlayerAttack.str();
-
-	std::stringstream ss3;
-	ss3 << mHero->GetPlayerAttack();
-	string s3 = ss3.str();
-
-	std::stringstream ssPlayerEvade;
-	ssPlayerEvade << "Player Hand";
-	string sPlayerEvade = ssPlayerEvade.str();
-
-	std::stringstream ss4;
-	ss4 << mHero->playerHand.size();
-	string s4 = ss4.str();
-
 	//string sItemsDisplay = mHero->DisplayItems().str();
 		
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
 	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 600.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerHealth);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, s1);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 525.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyHealth);
-	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 50, 15, s2);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 450.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerAttack);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 425.0f, 0.0f, 0.0f), 50, 50, 15, s3);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 375.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerEvade);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 350.0f, 0.0f, 0.0f), 50, 50, 15, s4);
 
 	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 50, 50, 15, sItemsDisplay);
 	md3dImmediateContext->OMSetDepthStencilState(0, 0);
@@ -1451,6 +1406,26 @@ FontRasterizer* InClassProj::GetFont()
 Sprite::Frame* InClassProj::GetTile()
 {
 	return mTiles[0];
+}
+
+ID3D11Device* InClassProj::GetDevice()
+{
+	return md3dDevice;
+}
+
+ID3D11DeviceContext* InClassProj::GetContext()
+{
+	return md3dImmediateContext;
+}
+
+ID3D11BlendState* InClassProj::GetTransparentBS()
+{
+	return mTransparentBS;
+}
+
+ID3D11DepthStencilState* InClassProj::GetFontDS()
+{
+	return mFontDS;
 }
 
 void InClassProj::OnMouseDown(WPARAM btnState, int x, int y)

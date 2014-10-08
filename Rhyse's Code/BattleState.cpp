@@ -8,13 +8,16 @@ void BattleState::Init()
 	mInventory->createItemVectors();
 	mInventory->CreateEnemyVectors();
 
-	mTestEnemy = SpawnEnemy();
+	mEnemy = SpawnEnemy();
 
 	mFont = ((InClassProj*)mStateMachine)->GetFont();
 
 	Next = false;
 
 	md3dDevice = ((InClassProj*)mStateMachine)->GetDevice();
+	md3dImmediateContext = ((InClassProj*)mStateMachine)->GetContext();
+	mTransparentBS = ((InClassProj*)mStateMachine)->GetTransparentBS();
+	mFontDS = ((InClassProj*)mStateMachine)->GetFontDS();
 
 	mBattleScreen = new Sprite::Frame();
 	ID3D11ShaderResourceView* image;
@@ -47,21 +50,21 @@ void BattleState::Update(float dt)
 			{
 				if (!isLClicked)
 				{
-					mHero->Attack(mTestEnemy);
+					mHero->Attack(mEnemy);
 
-					if (mTestEnemy->GetEnemyHealth() <= 0)
+					if (mEnemy->GetEnemyHealth() <= 0)
 					{
-						int level = mTestEnemy->GetEnemyLevel();
-						mEquip = mInventory->SelectEquip(level, mTestEnemy);
+						int level = mEnemy->GetEnemyLevel();
+						mEquip = mInventory->SelectEquip(level, mEnemy);
 						mItem = mInventory->SelectItem(level);
 						mHero->GetEquipment(mHero, mEquip);
 						mHero->GetItem(mItem);
-						delete mTestEnemy;
+						delete mEnemy;
 						Next = true;
 					}
-					else if (mTestEnemy)
+					else if (mEnemy)
 					{
-						mTestEnemy->Attack(mHero);
+						mEnemy->Attack(mHero);
 					}
 					if (mHero->GetPlayerHealth() <= 0)
 					{
@@ -74,6 +77,8 @@ void BattleState::Update(float dt)
 						mNextState->Init();
 						mStateMachine->SetCurrState(mNextState);
 					}
+					selectItemState = false;
+					drawMenu = false;
 					isLClicked = true;
 				}
 			}
@@ -92,10 +97,13 @@ void BattleState::Update(float dt)
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
 				if (!isLClicked)
-				{
+				{	
 					//test code
 					mHero->SetPlayerHealth(10);
+					exit(-1);
 
+					selectItemState = false;
+					drawMenu = false;
 					isLClicked = true;
 				}
 			}
@@ -131,22 +139,22 @@ void BattleState::Update(float dt)
 		if (i != -1)
 		{
 			mHero->UseItem(i, mHero);
-			mHero->Attack(mTestEnemy);
+			mHero->Attack(mEnemy);
 			mHero->ResetStats(i, mHero);
 			mHero->DeleteItem(i);
-			if (mTestEnemy->GetEnemyHealth() <= 0)
+			if (mEnemy->GetEnemyHealth() <= 0)
 			{
-				int level = mTestEnemy->GetEnemyLevel();
-				mEquip = mInventory->SelectEquip(level, mTestEnemy);
+				int level = mEnemy->GetEnemyLevel();
+				mEquip = mInventory->SelectEquip(level, mEnemy);
 				mItem = mInventory->SelectItem(level);
 				mHero->GetEquipment(mHero, mEquip);
 				mHero->GetItem(mItem);
-				delete mTestEnemy;
+				delete mEnemy;
 				Next = true;
 			}
-			else if (mTestEnemy)
+			else if (mEnemy)
 			{
-				mTestEnemy->Attack(mHero);
+				mEnemy->Attack(mHero);
 			}
 			if (mHero->GetPlayerHealth() <= 0)
 			{
@@ -175,7 +183,7 @@ void BattleState::SetInventory(Inventory* pInventory)
 //test code
 void BattleState::SetEnemy(Enemy* pEnemy)
 {
-	mTestEnemy = pEnemy;
+	mEnemy = pEnemy;
 }
 
 Enemy* BattleState::SpawnEnemy()
@@ -229,27 +237,27 @@ void BattleState::SpawnBoss()
 	Sprite::Frame* mTile = ((StateMachine*)mStateMachine)->GetCurrTile();
 	if (mTile->Level = 1 + 4)
 	{
-		mTestEnemy = mInventory->BossEnemies[0];
+		mEnemy = mInventory->BossEnemies[0];
 	}
 	if (mTile->Level = 2 + 4)
 	{
-		mTestEnemy = mInventory->BossEnemies[1];
+		mEnemy = mInventory->BossEnemies[1];
 	}
 	if (mTile->Level = 3 + 4)
 	{
-		mTestEnemy = mInventory->BossEnemies[2];
+		mEnemy = mInventory->BossEnemies[2];
 	}
 	if (mTile->Level = 4 + 4)
 	{
-		mTestEnemy = mInventory->BossEnemies[3];
+		mEnemy = mInventory->BossEnemies[3];
 	}
 	if (mTile->Level = 5 + 4)
 	{
-		mTestEnemy = mInventory->BossEnemies[4];
+		mEnemy = mInventory->BossEnemies[4];
 	}
 	//if (Stalker)
 	//{
-	// mTestEnemy = Inventory::BossEnemies[5];
+	// mEnemy = Inventory::BossEnemies[5];
 	//}
 }
 
@@ -300,11 +308,15 @@ int BattleState::PlayerSelectItem()
 void BattleState::DrawItemMenu(ID3D11DeviceContext* context)
 {
 		string sItemsDisplay = mHero->DisplayItems().str();
-		mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 15, sItemsDisplay);
+		mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sItemsDisplay);
 }
 
 void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
 {
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
+	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
+
 	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
 
 	for (int i = 0; i < 250; ++i)
@@ -324,4 +336,38 @@ void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect*
 	{
 		DrawItemMenu(context);
 	}
+
+	std::stringstream ssPlayerHealth;
+	ssPlayerHealth << mHero->GetPlayerHealth();
+	string sPlayerHealth = ssPlayerHealth.str();
+
+	string sEnemyDisplay = mEnemy->DisplayEnemy(mEnemy).str();
+
+	std::stringstream ssEnemyHealth;
+	ssEnemyHealth << mEnemy->GetEnemyHealth();
+	string sEnemyHealth = ssEnemyHealth.str();
+
+	std::stringstream ssPlayerAttack;
+	ssPlayerAttack << mHero->GetPlayerAttack();
+	string sPlayerAttack = ssPlayerAttack.str();
+
+	std::stringstream ssPlayerDefense;
+	ssPlayerDefense << mHero->GetPlayerDefense();
+	string sPlayerDefense = ssPlayerDefense.str();
+
+	std::stringstream ssPlayerEvade;
+	ssPlayerEvade << mHero->GetPlayerEvade();
+	string sPlayerEvade = ssPlayerEvade.str();
+
+	std::stringstream ssPlayerHand;
+	ssPlayerHand << mHero->playerHand.size();
+	string sPlayerHand = ssPlayerHand.str();
+
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(300.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHealth);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(150.0f, 565.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyDisplay);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(300.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sEnemyHealth);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerAttack);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerDefense);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerEvade);
+	mFont->DrawFont(md3dImmediateContext, XMVectorSet(1100.0f, 975.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHand);
 }

@@ -66,6 +66,9 @@ public:
 	FontRasterizer* GetFont();
 	Sprite::Frame* GetTile();
 	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetContext();
+	ID3D11BlendState* GetTransparentBS();
+	ID3D11DepthStencilState* GetFontDS();
 
 	void ItemMenu();
 

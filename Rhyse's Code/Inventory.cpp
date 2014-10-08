@@ -249,7 +249,7 @@ void Inventory::CreateEnemyVectors()
 	Enemy* mStoneGolem = new StoneGolem();
 	Enemy* mGorgon = new Gorgon();
 	Enemy* mGiantEagle = new GiantEagle();
-	Enemy* mTroll = new Troll;
+	Enemy* mTroll = new Troll();
 	Enemy* mCrocodile = new Crocodile();
 	Enemy* mDeviousPenguin = new DeviousPenguin();
 	Enemy* mBasilisk = new Basilisk();
