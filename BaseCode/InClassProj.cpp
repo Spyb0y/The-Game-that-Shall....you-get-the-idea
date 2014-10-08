@@ -123,8 +123,6 @@ InClassProj::~InClassProj()
 		ReleaseCOM(mNoDepthDS);
 }
 
-
-
 void InClassProj::BuildSceneLights()
 {
 	/* test code, test a point light out */
@@ -1188,10 +1186,8 @@ bool InClassProj::Init()
 	mInventory = new Inventory();
 	((BattleState*)mBattlePhase)->SetInventory(mInventory);
 
-	mTestEnemy = new ArmoredPhesant();
-	((BattleState*)mBattlePhase)->SetEnemy(mTestEnemy);
-
 	mInventory->createItemVectors();
+	mInventory->CreateEnemyVectors();
 
 	return true;
 
@@ -1222,6 +1218,11 @@ std::vector<Tile::Frame*> InClassProj::GetTileLvl5() const
 Tile*** InClassProj::GetBoard() const
 {
 	return (Tile***)board;
+}
+
+ID3D11Device* InClassProj::GetDevice()
+{
+	return md3dDevice;
 }
 
 void InClassProj::BuildBlendStates()
@@ -1308,7 +1309,7 @@ float timer = 0.0f;
 void InClassProj::UpdateScene(float dt)
 {
 	((TilePlacementState*)mTilePlacement)->Init();
-	mCurrState->Init();
+	//mCurrState->Init();
 	mCurrState->Update(dt);
 
 	RECT screenRect;
@@ -1384,9 +1385,9 @@ void InClassProj::DrawScene()
 	ssEnemyHealth << "Enemy Health";
 	string sEnemyHealth = ssEnemyHealth.str();
 
-	std::stringstream ss2;
-	ss2 << mTestEnemy->GetEnemyHealth();
-	string s2 = ss2.str();
+	//std::stringstream ss2;
+	//ss2 << mTestEnemy->GetEnemyHealth();
+	//string s2 = ss2.str();
 
 	std::stringstream ssPlayerAttack;
 	ssPlayerAttack << "Player Damage";
@@ -1397,11 +1398,11 @@ void InClassProj::DrawScene()
 	string s3 = ss3.str();
 
 	std::stringstream ssPlayerEvade;
-	ssPlayerEvade << "Player Evade";
+	ssPlayerEvade << "Player Hand";
 	string sPlayerEvade = ssPlayerEvade.str();
 
 	std::stringstream ss4;
-	ss4 << mHero->GetPlayerEvade();
+	ss4 << mHero->playerHand.size();
 	string s4 = ss4.str();
 
 	//string sItemsDisplay = mHero->DisplayItems().str();
@@ -1412,7 +1413,7 @@ void InClassProj::DrawScene()
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 600.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerHealth);
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, s1);
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 525.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyHealth);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 50, 15, s2);
+	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 500.0f, 0.0f, 0.0f), 50, 50, 15, s2);
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 450.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerAttack);
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 425.0f, 0.0f, 0.0f), 50, 50, 15, s3);
 	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 375.0f, 0.0f, 0.0f), 25, 25, 50, sPlayerEvade);
@@ -1447,6 +1448,10 @@ FontRasterizer* InClassProj::GetFont()
 	return mFont;
 }
 
+Sprite::Frame* InClassProj::GetTile()
+{
+	return mTiles[0];
+}
 
 void InClassProj::OnMouseDown(WPARAM btnState, int x, int y)
 {
@@ -1495,30 +1500,28 @@ void InClassProj::UpdateKeyboardInput(float dt)
 {
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
-
+		
 	}
 
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-
+		
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
-
+		
 	}
 
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-
-
+		
+		
 	}
 	if (GetAsyncKeyState('P') & 0x8000)
 	{
-
+		
 	}
-}
-Sprite::Frame* InClassProj::GetTile()
-{
-	return mTiles[0];
+
+
 }

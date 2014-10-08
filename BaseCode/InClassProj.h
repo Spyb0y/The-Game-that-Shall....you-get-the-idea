@@ -65,6 +65,8 @@ public:
 	int GetYPos();
 	FontRasterizer* GetFont();
 	Sprite::Frame* GetTile();
+	ID3D11Device* GetDevice();
+
 	void ItemMenu();
 
 private:

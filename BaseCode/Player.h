@@ -1,8 +1,9 @@
 #pragma once
+#include <ctime>
 #include "Equipment.h"
 #include "Item.h"
-
-class Enemy;
+#include "Inventory.h"
+#include "Enemy.h"
 
 class Player
 {
@@ -20,7 +21,7 @@ protected:
 
 	void AddPlayerStats(Player* mHero, Equipment* newItem);
 	void DeletePlayerStats(Player* mHero, Equipment* newItem);
-	
+		
 public:
 	std::vector<Equipment*> armourInventory;
 	std::vector<Equipment*> weaponInventory;
@@ -39,12 +40,19 @@ public:
 	int GetPlayerHealth();
 	void SetPlayerHealth(int);
 	int GetPlayerEvade();
+	unsigned GetPlayerDefense();
+
+	std::stringstream DisplayItems();
+	std::stringstream DisplayEquip();
 
 	//test code
 	int GetPlayerAttack();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
 	void GetItem(Item* newItem);
+	void UseItem(int i, Player* mHero);
+	void ResetStats(int i, Player* mHero);
+	void DeleteItem(int i);
 
 };
 

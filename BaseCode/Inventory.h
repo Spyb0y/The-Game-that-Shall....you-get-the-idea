@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <iostream>
+#include <ctime>
 #include "Equipment.h"
 #include "Item.h"
 #include "Enemy.h"
@@ -19,17 +21,16 @@ public:
 	std::vector<Equipment*> EquipLv4;
 	//vector of level 5 equipment
 	std::vector<Equipment*> EquipLv5;
-	//vector to hold boss items
+	//vector to hold boss iterm
 	//first item is stalkers item
 	//second item is minotaurs item
 	//third item is Stone guardians item
 	//fourth item is Gargoyles item
 	//fifth item is Hornet Queen's item
 	//sixth item is Rad Dragon's item
-	
 	std::vector<Equipment*> BossEquip;
 	void createItemVectors();
-	Equipment* SelectEquip(int);
+	Equipment* SelectEquip(int, Enemy*);
 	//level 1 item vector
 	std::vector<Item*> ItemsLv1;
 	//level 2 item vector
@@ -59,11 +60,13 @@ public:
 	//fourth element is gargoyle
 	//fifth element is queen hornet
 	//sixth elemnt is rad dragon
-	void CreateEnemyVectors;
+	void CreateEnemyVectors();
 
 	int GetForestSize();
 	int GetCastleSize();
 	int GetSwampSize();
 	int GetMountainSize();
+private:
+
 };
 
