@@ -98,13 +98,14 @@ void BattleState::Update(float dt)
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
 				if (!isLClicked)
-				{
-					//test code
-					exit(-1);
-
+				{	
 					selectItemState = false;
 					drawMenu = false;
 					isLClicked = true;
+
+					Next = false;
+					mLastState->Init();
+					mStateMachine->SetCurrState(mLastState);
 				}
 			}
 			else
@@ -314,8 +315,8 @@ void BattleState::DrawArmourInventory(ID3D11DeviceContext* context)
 
 void BattleState::DrawItemMenu(ID3D11DeviceContext* context)
 {
-	string sItemsDisplay = mHero->DisplayItems().str();
-	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sItemsDisplay);
+		string sItemsDisplay = mHero->DisplayItems().str();
+		mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sItemsDisplay);
 }
 
 void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
