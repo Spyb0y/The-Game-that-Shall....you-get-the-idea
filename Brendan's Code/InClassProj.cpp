@@ -81,8 +81,8 @@ InClassProj::InClassProj(HINSTANCE hInstance)
 
 	mBegin->SetNextState(mTilePlacement);
 	mTilePlacement->SetNextState(mPlayerTurn);
-	//mBattlePhase->SetNextState(mPlayerTurn);
-	mPlayerTurn->SetNextState(mTilePlacement);
+	mPlayerTurn->SetNextState(mBattlePhase);
+	mBattlePhase->SetNextState(mTilePlacement);
 
 	mCurrState = mBegin;
 
@@ -1409,9 +1409,11 @@ bool InClassProj::Init()
 
 	mHero = new Player();
 	((BattleState*)mBattlePhase)->SetPlayer(mHero);
+	((PlayerTurnState*)mPlayerTurn)->SetPlayer(mHero);
 
 	mInventory = new Inventory();
 	((BattleState*)mBattlePhase)->SetInventory(mInventory);
+	((PlayerTurnState*)mPlayerTurn)->SetInventory(mInventory);
 
 	mInventory->createItemVectors();
 	mInventory->CreateEnemyVectors();
@@ -1453,17 +1455,14 @@ int InClassProj::GetXPos()
 {
 	return mLastMousePos.x;
 }
-
 int InClassProj::GetYPos()
 {
 	return mLastMousePos.y;
 }
-
 std::vector <Sprite::Frame*> InClassProj::GetHomeVec() const
 {
 	return homeTile2;
 }
-
 std::vector<Tile::Frame*> InClassProj::GetTileLvl1() const
 {
 	return TileLvl1;
@@ -1581,20 +1580,20 @@ void InClassProj::UpdateScene(float dt)
 
 	XMVECTOR camPos = m2DCam->GetPos();
 
-	camPos = XMVectorSet(camPos.m128_f32[0] + camX, camPos.m128_f32[1] + camY, camPos.m128_f32[2], 1.0f);
+	camPos = XMVectorSet(camPos.m128_f32[0] + camX, camY, camPos.m128_f32[2], 1.0f);
 
-	if (((PlayerTurnState*)mPlayerTurn)->GetPlayerPos().x != NULL)
+	//mCam->SetPos(camPos);
+	//	mHero->AddForce(XMVectorSet(0.0f, -20.0f * dt, 0.0f, 0.0f));
+	if (((PlayerTurnState*)mPlayerTurn) != NULL)
 	{
 		XMVECTOR objectPos = XMVectorSet(((PlayerTurnState*)mPlayerTurn)->GetPlayerPos().x, ((PlayerTurnState*)mPlayerTurn)->GetPlayerPos().y, 0.0f, 0.0f);
-		XMVECTOR toObject = objectPos - m2DCam->GetPos();
-		toObject = XMVector3Normalize(toObject);
 	}
-	/*else
+	else
 	{
 		XMVECTOR objectPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		XMVECTOR toObject = objectPos - m2DCam->GetPos();
 		toObject = XMVector3Normalize(toObject);
-	}*/
+	}
 	
 	m2DCam->Update();
 
@@ -1627,8 +1626,6 @@ int InClassProj::CamLeft()
 	camX -= 125;
 	return camX;
 }
-
-
 
 void InClassProj::DrawScene()
 {
@@ -1668,19 +1665,19 @@ void InClassProj::DrawScene()
 
 	
 
-	std::stringstream ss;
+	/*std::stringstream ss;
 	ss << test;
 	string p = ss.str();
 
 	std::stringstream ss2;
 	ss2 << enemyHealth;
-	string e = ss2.str();
+	string e = ss2.str();*/
 		
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
 	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, p);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(250.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, e);
+	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(10.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, p);
+	//mFont->DrawFont(md3dImmediateContext, XMVectorSet(250.0f, 200.0f, 0.0f, 0.0f), 50, 50, 15, e);
 	md3dImmediateContext->OMSetDepthStencilState(0, 0);
 	md3dImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
@@ -1739,6 +1736,21 @@ void InClassProj::UpdateKeyboardInput(float dt)
 	if (GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		CamUp();
+	}
+
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		CamDown();
+	}
+
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+	{
+		CamLeft();
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	{
+		CamRight();
 	}
 }
 
