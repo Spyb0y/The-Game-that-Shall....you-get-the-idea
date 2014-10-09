@@ -5,7 +5,7 @@
 void PlayerTurnState::Init()
 {
 	mPlace = new TilePlacementState(mStateMachine);
-	
+	mFont = ((InClassProj*)mStateMachine)->GetFont();
 	col = mPlace->GetCurrCol();
 	row = mPlace->GetCurrRow();
 
@@ -34,17 +34,120 @@ void PlayerTurnState::Init()
 
 void PlayerTurnState::Update(float dt)
 {
-	col;
-	row;
+	PlayerPos.x = (col - 125) * 250;
+	PlayerPos.y = (row - 125) * 250;
 	PlayerTile->SetPos(XMVectorSet(PlayerPos.x, PlayerPos.y, 0.0f, 1.0f));
 	UpdateKeyboardInput(dt);
 	
+	int xPos = ((InClassProj*)mStateMachine)->GetXPos();
+	int yPos = ((InClassProj*)mStateMachine)->GetYPos();
+	if (xPos >= 0 && xPos <= 300)
+	{
+		if (yPos >= 0 && yPos <= 200)
+		{
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isLClicked)
+				{
+					showItemState = true;
+					if (Next)
+					{
+						Next = false;
+						mNextState->Init();
+						mStateMachine->SetCurrState(mNextState);
+					}
+					isLClicked = true;
+				}
+			}
+			else
+			{
+				isLClicked = false;
+			}
+		}
+	}
+
+	if (xPos >= 300 && xPos <= 600)
+	{
+		if (yPos >= 0 && yPos <= 200)
+		{
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isLClicked)
+				{
+					Next = true;
+					isLClicked = true;
+				}
+			}
+			else
+			{
+				isLClicked = false;
+			}
+		}
+
+	}
+
+	if (xPos >= 700 && xPos <= 900)
+	{
+		if (yPos >= 0 && yPos <= 200)
+		{
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isLClicked)
+				{
+					showItemState = true;
+					if (Next)
+					{
+						Next = false;
+						mNextState->Init();
+						mStateMachine->SetCurrState(mNextState);
+					}
+					isLClicked = true;
+				}
+			}
+			else
+			{
+				isLClicked = false;
+			}
+		}
+	}
+	if (showItemState)
+	{
+		drawItemMenu = true;
+		if (Next)
+		{
+			Next = false;
+			mNextState->Init();
+			mStateMachine->SetCurrState(mNextState);
+		}
+	}
+	if (showEquipState)
+	{
+		drawEquipMenu = true;
+		if (Next)
+		{
+			Next = false;
+			mNextState->Init();
+			mStateMachine->SetCurrState(mNextState);
+		}
+	}
 	if (Next)
 	{
 		Next = false;
+		mNextState->Init();
 		mStateMachine->SetCurrState(mNextState);
 	}
 }
+
+void PlayerTurnState::SetPlayer(Player* pPlayer)
+{
+	mHero = pPlayer;
+}
+
+void PlayerTurnState::SetInventory(Inventory* pInventory)
+{
+	mInventory = pInventory;
+}
+
 
 void PlayerTurnState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
 {
@@ -58,11 +161,38 @@ void PlayerTurnState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEff
 			if (board[i][j] != NULL)
 			{
 				board[i][j]->Draw(vp, context, litTexEffect);
-
 			}
-
 		}
 	}
+	if (drawItemMenu)
+	{
+		DrawItemMenu(context);
+	}
+	if (drawEquipMenu)
+	{
+		DrawEquipMenu(context);
+	}
+}
+
+void PlayerTurnState::DrawItemMenu(ID3D11DeviceContext* context)
+{
+	string sItemsDisplay = mHero->DisplayItems().str();
+	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 15, sItemsDisplay);
+}
+
+void PlayerTurnState::DrawEquipMenu(ID3D11DeviceContext* context)
+{
+	string sItemsDisplay = mHero->DisplayItems().str();
+	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 15, sItemsDisplay);
+}
+
+void PlayerTurnState::PlacePlayerTile()
+{
+	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
+
+	board[col][row] = PlayerTile;
+
+	Next = true;
 }
 
 void PlayerTurnState::MoveRight()
@@ -102,7 +232,6 @@ void PlayerTurnState::UpdateKeyboardInput(float dt)
 
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-
 		if (!IsAPressed)
 		{
 			MoveLeft();
@@ -139,18 +268,20 @@ void PlayerTurnState::UpdateKeyboardInput(float dt)
 	{
 		IsDPressed = false;
 	}
-	/*if (GetAsyncKeyState('P') & 0x8000)
+	if (GetAsyncKeyState('M') & 0x8000)
 	{
-		if (!IsPPressed)
+		if (!IsMPressed)
 		{
-			
+			PlacePlayerTile();
 		}
-		IsPPressed = true;
+		IsMPressed = true;
 	}
-	else if (!GetAsyncKeyState('P'))
+	else if (!GetAsyncKeyState('M'))
 	{
-		IsPPressed = false;
-	}*/
+		IsMPressed = false;
+	}
 
 
 }
+
+

@@ -60,6 +60,7 @@ private:
 	Enemy* SpawnEnemy();
 	void SpawnBoss();
 	void DrawItemMenu(ID3D11DeviceContext* context);
+	void DrawArmourInventory(ID3D11DeviceContext* context);
 	int PlayerSelectItem();
 
 	bool drawMenu;

@@ -91,112 +91,112 @@ void Inventory::createItemVectors()
 {
 	///////////////////////////////////////int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory
 	//weapons
-	Equipment* Bow = new Equipment(0, 0, 2, 0, 0, 2, true, false, false);
+	Equipment* Bow = new Equipment(0, 0, 2, 0, 0, 2, true, false, false, Equipment::Type::_Bow);
 	EquipLv1.push_back(Bow);
 
-	Equipment* ShortSword = new Equipment(0, 0, 2, 0, 0, 1, true, false, false);
+	Equipment* ShortSword = new Equipment(0, 0, 2, 0, 0, 1, true, false, false, Equipment::Type::_ShortSword);
 	EquipLv1.push_back(ShortSword);
 
-	Equipment* Axe = new Equipment(0, 0, 5, 0, 0, 1, true, false, false);
+	Equipment* Axe = new Equipment(0, 0, 5, 0, 0, 1, true, false, false, Equipment::Type::_Axe);
 	EquipLv2.push_back(Axe);
 
-	Equipment* Spear = new Equipment(0, 0, 10, 0, 0, 2, true, false, false);
+	Equipment* Spear = new Equipment(0, 0, 10, 0, 0, 2, true, false, false, Equipment::Type::_Spear);
 	EquipLv3.push_back(Spear);
 
-	Equipment* GreatSword = new Equipment(0, 0, 15, 0, 0, 2, true, false, false);
+	Equipment* GreatSword = new Equipment(0, 0, 15, 0, 0, 2, true, false, false, Equipment::Type::_GreatSword);
 	EquipLv4.push_back(GreatSword);
 
-	Equipment* Revolver = new Equipment(0, 0, 20, 0, 0, 1, true, false, false);
+	Equipment* Revolver = new Equipment(0, 0, 20, 0, 0, 1, true, false, false, Equipment::Type::_Revolver);
 	EquipLv5.push_back(Revolver);
 
-	Equipment* WhiteSword = new Equipment(0, 5, 10, 0, 0, 1, true, false, false);
+	Equipment* WhiteSword = new Equipment(0, 5, 10, 0, 0, 1, true, false, false, Equipment::Type::_WhiteSword);
 	EquipLv3.push_back(WhiteSword);
 
-	Equipment* Shield = new Equipment(0, 0, 0, 1, 0, 1, true, false, false);
+	Equipment* Shield = new Equipment(0, 0, 0, 1, 0, 1, true, false, false, Equipment::Type::_Shield);
 	EquipLv1.push_back(Shield);
 
-	Equipment* SteelShield = new Equipment(0, 0, 0, 1, 0, 1, true, false, false);
+	Equipment* SteelShield = new Equipment(0, 0, 0, 1, 0, 1, true, false, false, Equipment::Type::_SteelShield);
 	EquipLv1.push_back(SteelShield);
 
-	Equipment* BulwarkOfAges = new Equipment(0, 0, 0, 5, 0, 1, true, false, false);
+	Equipment* BulwarkOfAges = new Equipment(0, 0, 0, 5, 0, 1, true, false, false, Equipment::Type::_BulwarkOfAges);
 	EquipLv5.push_back(BulwarkOfAges);
 
 	//armour
-	Equipment* Leather = new Equipment(0, 0, 0, 1, 0, 1, false, true, false);
+	Equipment* Leather = new Equipment(0, 0, 0, 1, 0, 1, false, true, false, Equipment::Type::_Leather);
 	EquipLv1.push_back(Leather);
 
-	Equipment* Chainmail = new Equipment(0, 0, 0, 2, 0, 1, false, true, false);
+	Equipment* Chainmail = new Equipment(0, 0, 0, 2, 0, 1, false, true, false, Equipment::Type::_Chainmail);
 	EquipLv2.push_back(Chainmail);
 
-	Equipment* SteelArmour = new Equipment(0, 0, 0, 3, 0, 1, false, true, false);
+	Equipment* SteelArmour = new Equipment(0, 0, 0, 3, 0, 1, false, true, false, Equipment::Type::_SteelArmour);
 	EquipLv3.push_back(SteelArmour);
 
-	Equipment* PegasusBoots = new Equipment(0, 10, 0, 0, 0, 1, false, true, false);
+	Equipment* PegasusBoots = new Equipment(0, 10, 0, 0, 0, 1, false, true, false, Equipment::Type::_PegasusBoots);
 	EquipLv3.push_back(PegasusBoots);
 
-	Equipment* BarbarianArmour = new Equipment(0, 0, 1, 3, 0, 1, false, true, false);
+	Equipment* BarbarianArmour = new Equipment(0, 0, 1, 3, 0, 1, false, true, false, Equipment::Type::_BarbarianArmour);
 	EquipLv4.push_back(BarbarianArmour);
 
-	Equipment* HeavyPlate = new Equipment(0, 0, 0, 8, 0, 2, false, true, false);
+	Equipment* HeavyPlate = new Equipment(0, 0, 0, 8, 0, 2, false, true, false, Equipment::Type::_HeavyPlate);
 	EquipLv5.push_back(HeavyPlate);
 
-	Equipment* PaladinGloves = new Equipment(5, 0, 0, 0, 0, 1, false, true, false);
+	Equipment* PaladinGloves = new Equipment(5, 0, 0, 0, 0, 1, false, true, false, Equipment::Type::_PaladinGloves);
 	EquipLv5.push_back(PaladinGloves);
 
-	Equipment* SpartanHelmet = new Equipment(0, 0, 3, 2, 0, 1, false, true, false);
+	Equipment* SpartanHelmet = new Equipment(0, 0, 3, 2, 0, 1, false, true, false, Equipment::Type::_SpartanHelmet);
 	EquipLv5.push_back(SpartanHelmet);
 
 	//Accesories
-	Equipment* GhostRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* GhostRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_GhostRing);
 	EquipLv5.push_back(GhostRing);
 
-	Equipment* InvisRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* InvisRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_InvisRing);
 	EquipLv3.push_back(InvisRing);
 
-	Equipment* MonkeyGrip = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* MonkeyGrip = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_MonkeyGrip);
 	EquipLv3.push_back(MonkeyGrip);
 
-	Equipment* SilverRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* SilverRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_SilverRing);
 	EquipLv1.push_back(SilverRing);
 
-	Equipment* GoldRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* GoldRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_GoldRing);
 	EquipLv1.push_back(GoldRing);
 
-	Equipment* JewelRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* JewelRing = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_JewelRing);
 	EquipLv3.push_back(JewelRing);
 
-	Equipment* BlueBraclet = new Equipment(0, 0, 9, 0, 0, 1, false, false, true);
+	Equipment* BlueBraclet = new Equipment(0, 0, 9, 0, 0, 1, false, false, true, Equipment::Type::_BlueBraclet);
 	EquipLv4.push_back(BlueBraclet);
 
-	Equipment* RBraclet = new Equipment(0, 0, 2, 0, 0, 1, false, false, true);
+	Equipment* RBraclet = new Equipment(0, 0, 2, 0, 0, 1, false, false, true, Equipment::Type::_RedBraclet);
 	EquipLv1.push_back(RBraclet);
 
-	Equipment* SilverBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* SilverBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_SilverBracelet);
 	EquipLv1.push_back(SilverBracelet);
 
-	Equipment* GoldBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* GoldBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_GoldBracelet);
 	EquipLv1.push_back(GoldBracelet);
 
-	Equipment* JewelBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true);
+	Equipment* JewelBracelet = new Equipment(0, 0, 0, 0, 0, 1, false, false, true, Equipment::Type::_JewelBracelet);
 	EquipLv3.push_back(JewelBracelet);
 
 	//boss items
-	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false);
+	Equipment* StalkersScythe = new Equipment(0, 0, 66, 0, 1, 2, true, false, false, Equipment::Type::_StalkersScythe);
 	BossEquip.push_back(StalkersScythe);
 
-	Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, true, false, false);
+	Equipment* GreatAxe = new Equipment(0, 0, 15, 0, 0, 2, true, false, false, Equipment::Type::_GreatAxe);
 	BossEquip.push_back(GreatAxe);
 
-	Equipment* MaceOfAges = new Equipment(0, 0, 15, 5, 0, 2, true, false, false);
+	Equipment* MaceOfAges = new Equipment(0, 0, 15, 5, 0, 2, true, false, false, Equipment::Type::_MaceOfAges);
 	BossEquip.push_back(MaceOfAges);
 
-	Equipment* WingedPlateMail = new Equipment(0, 0, 0, 10, 1, 1, false, true, false);
+	Equipment* WingedPlateMail = new Equipment(0, 0, 0, 10, 1, 1, false, true, false, Equipment::Type::_WingedPlatemail);
 	BossEquip.push_back(WingedPlateMail);
 
-	Equipment* DaggerOfDeception = new Equipment(0, 0, 15, 5, 1, 1, true, false, false);
+	Equipment* DaggerOfDeception = new Equipment(0, 0, 15, 5, 1, 1, true, false, false, Equipment::Type::_DaggerOfDeception);
 	BossEquip.push_back(DaggerOfDeception);
 
-	Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true);
+	Equipment* KeyOfVictory = new Equipment(0, 0, 0, 0, 0, 0, false, false, true, Equipment::Type::_KeyOfVictory);
 	BossEquip.push_back(KeyOfVictory);
 
 	//consumable vectors

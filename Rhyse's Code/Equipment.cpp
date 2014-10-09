@@ -1,6 +1,6 @@
 #include "Equipment.h"
 #include <vector>
-Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory)
+Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory, Type type)
 	{
 		HP = Hp;
 		Evasion = Eva;
@@ -11,6 +11,7 @@ Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool 
 		isWeapon = IsWeapon;
 		isArmor = IsArmor;
 		isAccessory = IsAccessory;
+		iType = type;
 	}
 
 	Equipment::Equipment()
@@ -30,4 +31,9 @@ Equipment::Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool 
 	{
 
 	}
+
+Equipment::Type Equipment::GetItemType()
+{
+	return iType;
+}
 	

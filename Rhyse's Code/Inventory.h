@@ -21,7 +21,7 @@ public:
 	std::vector<Equipment*> EquipLv4;
 	//vector of level 5 equipment
 	std::vector<Equipment*> EquipLv5;
-	//vector to hold boss iterm
+	//vector to hold boss items
 	//first item is stalkers item
 	//second item is minotaurs item
 	//third item is Stone guardians item

@@ -44,6 +44,7 @@ public:
 	int GetPlayerAttack();
 
 	std::stringstream DisplayItems();
+	std::stringstream DisplayEquip();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
 	void GetItem(Item* newItem);

@@ -33,6 +33,7 @@ void BattleState::Init()
 	mBattleScreen->Direction = 1;
 
 	mBattleScreenVector.push_back(mBattleScreen);
+	Sprite::Frame* test = mBattleScreenVector[0];
 	mScreenToDraw = new Tile(XMVectorSet(950.0f, 500.0f, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 1900, 1000, 0.0f, mBattleScreenVector, 1.0f, md3dDevice);
 
 }
@@ -99,7 +100,6 @@ void BattleState::Update(float dt)
 				if (!isLClicked)
 				{	
 					//test code
-					mHero->SetPlayerHealth(10);
 					exit(-1);
 
 					selectItemState = false;
@@ -163,6 +163,7 @@ void BattleState::Update(float dt)
 			}
 			if (Next)
 			{
+				Next = false;
 				mNextState->Init();
 				mStateMachine->SetCurrState(mNextState);
 			}
@@ -305,6 +306,12 @@ int BattleState::PlayerSelectItem()
 	}
 }
 
+void BattleState::DrawArmourInventory(ID3D11DeviceContext* context)
+{
+	string sArmourDisplay = mHero->DisplayEquip().str();
+	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sArmourDisplay);
+}
+
 void BattleState::DrawItemMenu(ID3D11DeviceContext* context)
 {
 		string sItemsDisplay = mHero->DisplayItems().str();
@@ -314,8 +321,8 @@ void BattleState::DrawItemMenu(ID3D11DeviceContext* context)
 void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
 {
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
-	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
+	context->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
+	context->OMSetDepthStencilState(mFontDS, 0);
 
 	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
 
@@ -363,11 +370,11 @@ void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect*
 	ssPlayerHand << mHero->playerHand.size();
 	string sPlayerHand = ssPlayerHand.str();
 
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(300.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHealth);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(150.0f, 565.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyDisplay);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(300.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sEnemyHealth);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerAttack);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerDefense);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(750.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerEvade);
-	mFont->DrawFont(md3dImmediateContext, XMVectorSet(1100.0f, 975.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHand);
+	mFont->DrawFont(context, XMVectorSet(300.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHealth);
+	mFont->DrawFont(context, XMVectorSet(150.0f, 565.0f, 0.0f, 0.0f), 25, 25, 50, sEnemyDisplay);
+	mFont->DrawFont(context, XMVectorSet(300.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sEnemyHealth);
+	mFont->DrawFont(context, XMVectorSet(750.0f, 675.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerAttack);
+	mFont->DrawFont(context, XMVectorSet(750.0f, 575.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerDefense);
+	mFont->DrawFont(context, XMVectorSet(750.0f, 475.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerEvade);
+	mFont->DrawFont(context, XMVectorSet(1100.0f, 975.0f, 0.0f, 0.0f), 50, 50, 15, sPlayerHand);
 }
