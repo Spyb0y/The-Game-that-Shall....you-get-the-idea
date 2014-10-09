@@ -153,6 +153,10 @@ std::stringstream Player::DisplayEquip()
 		{
 			ss << "1 white sword /n";
 		}
+		else
+		{
+			ss << "error";
+		}
 		++i;
 	}
 	i = 0;
@@ -197,6 +201,10 @@ std::stringstream Player::DisplayEquip()
 		else if (armourInventory[i]->GetItemType() == Equipment::Type::_SpartanHelmet)
 		{
 			ss << "1 spartan helmet... because THIS IS SPARTA!@!!!! /n";
+		}
+		else
+		{
+			ss << "error";
 		}
 		++i;
 	}
@@ -271,8 +279,13 @@ std::stringstream Player::DisplayEquip()
 		{
 			ss << "wait a minute... how are you even looking at this? /n";
 		}
+		else
+		{
+			ss << "error";
+		}
 		++i;
 	}
+	return ss;
 }
 void Player::UseItem(int i, Player* mHero)
 {
