@@ -122,38 +122,43 @@ std::stringstream Player::DisplayEquip()
 {
 	std::stringstream ss;
 	int i = 0;
-	while (i < armourInventory.size())
+	while (i < weaponInventory.size())
 	{
 		ss << "items you have in your inventory: /n";
-		if (armourInventory[i]->GetItemType() == Equipment::Type::_Bow)
+		if (weaponInventory[i]->GetItemType() == Equipment::Type::_Bow)
 		{
 			ss << "1 bow /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_ShortSword)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_ShortSword)
 		{
 			ss << "1 short sword /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_Axe)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_Axe)
 		{
 			ss << "1 axe /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_Spear)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_Spear)
 		{
 			ss << "1 spear /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_GreatSword)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_GreatSword)
 		{
 			ss << "1 great sword /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_Revolver)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_Revolver)
 		{
 			ss << "1 Revolver /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_WhiteSword)
+		else if (weaponInventory[i]->GetItemType() == Equipment::Type::_WhiteSword)
 		{
 			ss << "1 white sword /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_Shield)
+		++i;
+	}
+	i = 0;
+	while (i < armourInventory.size())
+	{
+		if (armourInventory[i]->GetItemType() == Equipment::Type::_Shield)
 		{
 			ss << "1 Shield /n";
 		}
@@ -193,7 +198,12 @@ std::stringstream Player::DisplayEquip()
 		{
 			ss << "1 spartan helmet... because THIS IS SPARTA!@!!!! /n";
 		}
-		else if (armourInventory[i]->GetItemType() == Equipment::Type::_GhostRing)
+		++i;
+	}
+	i = 0;
+	while (i < accessoryInventory.size())
+	{
+		if (armourInventory[i]->GetItemType() == Equipment::Type::_GhostRing)
 		{
 			ss << "1 ghost ring, you have an extra hand, sorta /n";
 		}
@@ -261,6 +271,7 @@ std::stringstream Player::DisplayEquip()
 		{
 			ss << "wait a minute... how are you even looking at this? /n";
 		}
+		++i;
 	}
 }
 void Player::UseItem(int i, Player* mHero)
