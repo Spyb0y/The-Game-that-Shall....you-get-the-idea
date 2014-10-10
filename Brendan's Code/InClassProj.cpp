@@ -1399,6 +1399,16 @@ bool InClassProj::Init()
 		}
 
 	}
+	playerBoard = new Tile**[250];
+	for (int i = 0; i < 250; ++i)
+	{
+		playerBoard[i] = new Tile*[250];
+		for (int j = 0; j < 250; ++j)
+		{
+			playerBoard[i][j] = NULL;
+		}
+
+	}
 	int homeCol = ((TilePlacementState*)mTilePlacement)->GetCurrCol();
 	int homeRow = ((TilePlacementState*)mTilePlacement)->GetCurrRow();	
 	
@@ -1488,6 +1498,10 @@ Tile*** InClassProj::GetBoard() const
 {
 	return (Tile***)board;
 }
+Tile*** InClassProj::GetPlayerBoard() const
+{
+	return (Tile***)playerBoard;
+}
 
 void InClassProj::BuildBlendStates()
 {
@@ -1572,7 +1586,7 @@ void InClassProj::OnResize()
 float timer = 0.0f;
 void InClassProj::UpdateScene(float dt)
 {
-	((TilePlacementState*)mTilePlacement)->Init();
+	//((TilePlacementState*)mTilePlacement)->Init();
 	
 	mCurrState->Update(dt);
 	

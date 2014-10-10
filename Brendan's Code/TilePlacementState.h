@@ -4,6 +4,7 @@
 #include <ctime>
 #include "BeginState.h"
 #include "Sprite.h"
+#include "Inventory.h"
 
 class TilePlacementState : public State
 {
@@ -23,15 +24,18 @@ public:
 		IsDPressed(false),
 		IsPPressed(false),
 		Next(false),
-		BossLvl1(false),
-		BossLvl2(false),
-		BossLvl3(false),
-		BossLvl4(false),
-		BossLvl5(false)
+		pBossLvl1(false),
+		pBossLvl2(false),
+		pBossLvl3(false),
+		pBossLvl4(false),
+		pBossLvl5(false)
 	{
 	}
 		
-	virtual ~TilePlacementState(){}
+	virtual ~TilePlacementState()
+	{
+		delete mNextState;
+	}
 
 	void Init();
 	void Update(float dt);
@@ -46,6 +50,7 @@ public:
 	void UpdateKeyboardInput(float dt);
 	void DealCard(ID3D11Device* device);
 	void SetCurrentTile(Sprite::Frame* temp);
+	void SetBossBools();
 	Sprite::Frame* GetCurrentTile();
 	int GetCurrRow() const
 	{
@@ -56,6 +61,12 @@ public:
 	{
 		return curCol;
 	}
+
+	bool pBossLvl1;
+	bool pBossLvl2;
+	bool pBossLvl3;
+	bool pBossLvl4;
+	bool pBossLvl5;
 
 private:
 	PlacementState mCurrState;
@@ -68,12 +79,7 @@ private:
 	bool IsDPressed;
 	bool IsPPressed;
 	bool Next;
-	bool BossLvl1;
-	bool BossLvl2;
-	bool BossLvl3;
-	bool BossLvl4;
-	bool BossLvl5;
-
+	
 	int curCol;
 	int curRow;
 	Tile* prevTile;
@@ -83,6 +89,12 @@ private:
 	std::vector<Sprite::Frame*> tile;
 	XMFLOAT2 TilePos;
 	Sprite::Frame* currentTile;
+	Inventory* inv;
+	std::vector<Enemy*> Bosses;
+	ID3D11BlendState* mTransparentBS;
+	ID3D11DepthStencilState* mFontDS;
+	ID3D11DeviceContext* md3dImmediateContext;
+	ID3D11Device* md3dDevice;
 	
 };
 

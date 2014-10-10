@@ -49,6 +49,7 @@ public:
 
 	void GetImage() const;
 	Tile*** GetBoard() const;
+	Tile*** GetPlayerBoard() const;
 	std::vector<Tile::Frame*> GetTileLvl1() const;
 	std::vector<Tile::Frame*> GetTileLvl2() const;
 	std::vector<Tile::Frame*> GetTileLvl3() const;
@@ -122,6 +123,7 @@ private:
 	std::vector<Tile::Frame*> mTiles;
 	std::vector<Sprite::Frame*> homeTile2;
 	Tile*** board;
+	Tile*** playerBoard;
 	
 	bool isPressed;
 

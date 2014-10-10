@@ -36,7 +36,12 @@ public:
 	void MoveUp();
 	void MoveDown();
 	void UpdateKeyboardInput(float dt);
+	void SetPlayer(Player* pPlayer);
+	void SetInventory(Inventory* pInventory);
 	void PlacePlayerTile();
+	void DrawItemMenu(ID3D11DeviceContext* context);
+	void DrawEquipMenu(ID3D11DeviceContext* context);
+	
 	XMFLOAT2 GetPlayerPos() const
 	{
 		return PlayerPos;
@@ -54,9 +59,6 @@ private:
 	int col;
 	int row;
 	std::vector<Sprite::Frame*> mPlayerTile;
-
-	void PlayerTurnState::DrawItemMenu(ID3D11DeviceContext* context);
-	void PlayerTurnState::DrawEquipMenu(ID3D11DeviceContext* context);
 	ID3D11DeviceContext* md3dImmediateContext;
 	ID3D11Device* md3dDevice;
 	bool showItemState;
@@ -69,5 +71,8 @@ private:
 	Equipment* mEquip;
 	Item* mItem;
 	FontRasterizer* mFont;
+	ID3D11BlendState* mTransparentBS;
+	ID3D11DepthStencilState* mFontDS;
+	
 };
 

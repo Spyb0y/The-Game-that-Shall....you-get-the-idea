@@ -6,7 +6,10 @@ void PlayerTurnState::Init()
 {
 	mPlace = new TilePlacementState(mStateMachine);
 	mFont = ((InClassProj*)mStateMachine)->GetFont();
-	mHero = ((InClassProj*)mStateMachine)->GetPlayer();
+	md3dDevice = ((InClassProj*)mStateMachine)->GetDevice();
+	md3dImmediateContext = ((InClassProj*)mStateMachine)->GetContext();
+	mTransparentBS = ((InClassProj*)mStateMachine)->GetTransparentBS();
+	mFontDS = ((InClassProj*)mStateMachine)->GetFontDS();
 	col = mPlace->GetCurrCol();
 	row = mPlace->GetCurrRow();
 
@@ -22,15 +25,17 @@ void PlayerTurnState::Init()
 	playerTile->Terrain = 2;
 	playerTile->Level = 5;
 	playerTile->Direction = 24;
-	playerTile->isUp = true;
-	playerTile->isDown = true;
-	playerTile->isLeft = true;
-	playerTile->isRight = true;
+	//playerTile->isUp = true;
+	//playerTile->isDown = true;
+	//playerTile->isLeft = true;
+	//playerTile->isRight = true;
 	mPlayerTile.push_back(playerTile);
-
+	showItemState = false;
+	showEquipState = false;
 	PlayerPos.x = (col - 125) * 250;
 	PlayerPos.y = (row - 125) * 250;
 	PlayerTile = new Tile(XMVectorSet(PlayerPos.x, PlayerPos.y, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, mPlayerTile, 1.0f, mStateMachine->GetDevice());
+	
 }
 
 void PlayerTurnState::Update(float dt)
@@ -51,6 +56,7 @@ void PlayerTurnState::Update(float dt)
 				if (!isLClicked)
 				{
 					showItemState = true;
+					showEquipState = false;
 					if (Next)
 					{
 						Next = false;
@@ -75,7 +81,9 @@ void PlayerTurnState::Update(float dt)
 			{
 				if (!isLClicked)
 				{
-					Next = true;
+					showEquipState = true;
+					showItemState = false;
+					Next = false;
 					isLClicked = true;
 				}
 			}
@@ -95,7 +103,7 @@ void PlayerTurnState::Update(float dt)
 			{
 				if (!isLClicked)
 				{
-					showItemState = true;
+					Next = true;
 					if (Next)
 					{
 						Next = false;
@@ -116,6 +124,7 @@ void PlayerTurnState::Update(float dt)
 		drawItemMenu = true;
 		if (Next)
 		{
+			Next = false;
 			mNextState->Init();
 			mStateMachine->SetCurrState(mNextState);
 		}
@@ -125,6 +134,7 @@ void PlayerTurnState::Update(float dt)
 		drawEquipMenu = true;
 		if (Next)
 		{
+			Next = false;
 			mNextState->Init();
 			mStateMachine->SetCurrState(mNextState);
 		}
@@ -132,13 +142,30 @@ void PlayerTurnState::Update(float dt)
 	if (Next)
 	{
 		Next = false;
+		mNextState->Init();
 		mStateMachine->SetCurrState(mNextState);
 	}
 }
 
+void PlayerTurnState::SetPlayer(Player* pPlayer)
+{
+	mHero = pPlayer;
+}
+
+void PlayerTurnState::SetInventory(Inventory* pInventory)
+{
+	mInventory = pInventory;
+}
+
+
 void PlayerTurnState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
 {
-	PlayerTile->Draw(vp, context, litTexEffect);
+
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
+	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
+
+	
 	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
 
 	for (int i = 0; i < 250; ++i)
@@ -151,6 +178,20 @@ void PlayerTurnState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEff
 			}
 		}
 	}
+
+	Tile*** pBoard = ((InClassProj*)mStateMachine)->GetPlayerBoard();
+
+	for (int i = 0; i < 250; ++i)
+	{
+		for (int j = 0; j < 250; ++j)
+		{
+			if (pBoard[i][j] != NULL)
+			{
+				pBoard[i][j]->Draw(vp, context, litTexEffect);
+			}
+		}
+	}
+	PlayerTile->Draw(vp, context, litTexEffect);
 	if (drawItemMenu)
 	{
 		DrawItemMenu(context);
@@ -169,15 +210,15 @@ void PlayerTurnState::DrawItemMenu(ID3D11DeviceContext* context)
 
 void PlayerTurnState::DrawEquipMenu(ID3D11DeviceContext* context)
 {
-	string sItemsDisplay = mHero->DisplayItems().str();
+	string sItemsDisplay = mHero->DisplayEquip().str();
 	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 15, sItemsDisplay);
 }
 
 void PlayerTurnState::PlacePlayerTile()
 {
-	Tile*** board = ((InClassProj*)mStateMachine)->GetBoard();
+	Tile*** pBoard = ((InClassProj*)mStateMachine)->GetPlayerBoard();
 
-	board[col][row] = PlayerTile;
+	pBoard[col][row] = PlayerTile;
 
 	Next = true;
 }

@@ -6,10 +6,22 @@
 void TilePlacementState::Init()
 {
 	DealCard(mStateMachine->GetDevice());
+	md3dDevice = ((InClassProj*)mStateMachine)->GetDevice();
+	md3dImmediateContext = ((InClassProj*)mStateMachine)->GetContext();
+	mTransparentBS = ((InClassProj*)mStateMachine)->GetTransparentBS();
+	mFontDS = ((InClassProj*)mStateMachine)->GetFontDS();
+	inv = new Inventory();
+
+	pBossLvl1 = ((StateMachine*)mStateMachine)->GetBool1();
+	pBossLvl2 = ((StateMachine*)mStateMachine)->GetBool2();
+	pBossLvl3 = ((StateMachine*)mStateMachine)->GetBool3();
+	pBossLvl4 = ((StateMachine*)mStateMachine)->GetBool4();
+	pBossLvl5 = ((StateMachine*)mStateMachine)->GetBool5();
 }
 
 void TilePlacementState::Update(float dt)
 {
+	DealCard(mStateMachine->GetDevice());
 	curCol;
 	curRow;
 
@@ -27,6 +39,9 @@ void TilePlacementState::Update(float dt)
 
 void  TilePlacementState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
 {
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	md3dImmediateContext->OMSetBlendState(mTransparentBS, blendFactor, 0xffffffff);
+	md3dImmediateContext->OMSetDepthStencilState(mFontDS, 0);
 	
 	TileToBePlaced->Draw(vp, context, litTexEffect);
 	
@@ -43,7 +58,18 @@ void  TilePlacementState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTe
 			}
 		}
 	}
-	
+
+	Tile*** pBoard = ((InClassProj*)mStateMachine)->GetPlayerBoard();
+	for (int i = 0; i < 250; ++i)
+	{
+		for (int j = 0; j < 250; ++j)
+		{
+			if (pBoard[i][j] != NULL)
+			{
+				pBoard[i][j]->Draw(vp, context, litTexEffect);
+			}
+		}
+	}
 }
 
 void TilePlacementState::DealCard(ID3D11Device* device)
@@ -64,30 +90,30 @@ void TilePlacementState::DealCard(ID3D11Device* device)
 	int k = rand() % 60;
 	tile.clear();
 		
-	if (BossLvl4)
+	if (pBossLvl4)
 	{
 		tile.push_back(Lvl5[k]);
 		SetCurrentTile(Lvl5[k]);
 	}
-	else if (BossLvl3)
+	else if (pBossLvl3)
 	{
 		tile.push_back(Lvl4[j]);
 		SetCurrentTile(Lvl4[j]);
 	}
-	else if (BossLvl2)
+	else if (pBossLvl2)
 	{
 		tile.push_back(Lvl3[j]);
 		SetCurrentTile(Lvl3[j]);
 	}
-	else if (BossLvl1)
+	else if (pBossLvl1)
 	{
 		tile.push_back(Lvl2[i]);
 		SetCurrentTile(Lvl2[i]);
 	}
 	else
 	{
-		tile.push_back(Lvl1[i]);
 		SetCurrentTile(Lvl1[i]);
+		tile.push_back(Lvl1[i]);
 	}
 			
 	TileToBePlaced = new Tile(XMVectorSet(TilePos.x, TilePos.y, 0.0f, 1.0f), XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), 250, 250, 0.0f, tile, 1.0f, device);

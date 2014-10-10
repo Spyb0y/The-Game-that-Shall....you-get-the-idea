@@ -8,6 +8,7 @@ void BattleState::Init()
 	mInventory = new Inventory();
 	mInventory->createItemVectors();
 	mInventory->CreateEnemyVectors();
+	boss = mInventory->GetBossVec();
 
 	mEnemy = SpawnEnemy();
 
@@ -89,8 +90,6 @@ void BattleState::Update(float dt)
 			}
 		}
 	}
-
-
 	if (xPos >= 300 && xPos <= 600)
 	{
 		if (yPos >= 0 && yPos <= 200)
@@ -169,6 +168,10 @@ void BattleState::Update(float dt)
 			}
 		}
 	}
+	if (mEnemy->GetEnemyHealth() <= 0)
+	{
+		SetBossBools();
+	}
 }
 
 void BattleState::SetPlayer(Player* pPlayer)
@@ -185,6 +188,51 @@ void BattleState::SetInventory(Inventory* pInventory)
 void BattleState::SetEnemy(Enemy* pEnemy)
 {
 	mEnemy = pEnemy;
+}
+
+void BattleState::SetBossBools()
+{
+	if (boss[0]->GetEnemyHealth() <= 0)
+	{
+		BossLvl1 = true;
+	}
+	if (boss[1]->GetEnemyHealth() <= 0)
+	{
+		BossLvl2 = true;
+	}
+	if (boss[2]->GetEnemyHealth() <= 0)
+	{
+		BossLvl3 = true;
+	}
+	if (boss[3]->GetEnemyHealth() <= 0)
+	{
+		BossLvl4 = true;
+	}
+	if (boss[4]->GetEnemyHealth() <= 0)
+	{
+		BossLvl5 = true;
+	}
+}
+
+bool BattleState::GetBoss1Bool() const
+{
+	return BossLvl1;
+}
+bool BattleState::GetBoss2Bool() const
+{
+	return BossLvl2;
+}
+bool BattleState::GetBoss3Bool() const
+{
+	return BossLvl3;
+}
+bool BattleState::GetBoss4Bool() const
+{
+	return BossLvl4;
+}
+bool BattleState::GetBoss5Bool() const
+{
+	return BossLvl5;
 }
 
 Enemy* BattleState::SpawnEnemy()
