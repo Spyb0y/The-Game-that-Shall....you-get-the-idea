@@ -43,9 +43,13 @@ public:
 		_DaggerOfDeception,
 		_KeyOfVictory
 	};
+public:
 	Equipment(int Hp, int Eva, int Atk, int Def, int Spe, int size, bool IsWeapon, bool IsArmor, bool IsAccessory, Type type);
 	Equipment();
 	~Equipment();
+
+	Equipment::Type GetItemType();
+
 	 int HP;
 	 int Evasion;
 	 int Attack;
@@ -55,8 +59,8 @@ public:
 	 bool isArmor;
 	 bool isWeapon;
 	 bool isAccessory;
-	 Type iType;
 
-	 Equipment::Type GetItemType();
+private:
+	Type iType;
 };
 #endif // EQUIPMENT_H
