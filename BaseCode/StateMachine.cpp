@@ -9,9 +9,12 @@
 #include "GameOverState.h"
 #include "GameWonState.h"
 
+#include "TilePlacementState.h"
+
 
 StateMachine::StateMachine()
 {
+	/*
 	mBegin = new BeginState(this);
 	mStartTurn = new DrawTileCard(this);
 	mTilePlacement = new TilePlacementState(this);
@@ -22,10 +25,15 @@ StateMachine::StateMachine()
 	mGameOver = new GameOverState(this);
 	mGameWon = new GameWonState(this);
 
-	mStartTurn->SetNextState(mTilePlacement);
-	mTilePlacement->SetNextState(mStartTurn);
+	mBegin->SetNextState(mTilePlacement);
+	mTilePlacement->SetNextState(mBattlePhase);
+	mBattlePhase->SetNextState(mTilePlacement);
 
-	mBattlePhase->SetNextState(mStartTurn);
+	mCurrState = mBegin;*/
+}
 
-	mCurrState = mBegin;
+Sprite::Frame* StateMachine::GetCurrTile()
+{
+	mCurrentTile = ((TilePlacementState*)mTilePlacement)->GetCurrentTile();
+	return mCurrentTile;
 }
