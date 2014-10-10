@@ -1575,6 +1575,12 @@ void InClassProj::UpdateScene(float dt)
 	((TilePlacementState*)mTilePlacement)->Init();
 	
 	mCurrState->Update(dt);
+	
+	RECT screenRect;
+	screenRect.left = 0;
+	screenRect.right = mClientWidth;
+	screenRect.top = 0;
+	screenRect.bottom = mClientHeight;
 
 	std::vector<Sprite::Frame*> frames;
 
