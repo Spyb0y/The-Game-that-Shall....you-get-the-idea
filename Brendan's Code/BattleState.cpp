@@ -56,6 +56,7 @@ void BattleState::Update(float dt)
 
 					if (mEnemy->GetEnemyHealth() <= 0)
 					{
+						SetBossBools();
 						int level = mEnemy->GetEnemyLevel();
 						mEquip = mInventory->SelectEquip(level, mEnemy);
 						mItem = mInventory->SelectItem(level);
@@ -167,10 +168,6 @@ void BattleState::Update(float dt)
 				mStateMachine->SetCurrState(mNextState);
 			}
 		}
-	}
-	if (mEnemy->GetEnemyHealth() <= 0)
-	{
-		SetBossBools();
 	}
 }
 
@@ -290,25 +287,25 @@ Enemy* BattleState::SpawnEnemy()
 Enemy* BattleState::SpawnBoss()
 {
 	Sprite::Frame* mTile = ((StateMachine*)mStateMachine)->GetCurrTile();
-	if (mTile->Level = 5)
+	if (mTile->Level == 5)
 	{
-		return mInventory->BossEnemies[0];
+		return boss[0];
 	}
-	if (mTile->Level = 6)
+	else if (mTile->Level == 6)
 	{
-		return mInventory->BossEnemies[1];
+		return boss[1];
 	}
-	if (mTile->Level = 7)
+	else if (mTile->Level == 7)
 	{
-		return mInventory->BossEnemies[2];
+		return boss[2];
 	}
-	if (mTile->Level = 8)
+	else if (mTile->Level == 8)
 	{
-		return mInventory->BossEnemies[3];
+		return boss[3];
 	}
-	if (mTile->Level = 9)
+	else if (mTile->Level == 9)
 	{
-		return mInventory->BossEnemies[4];
+		return boss[4];
 	}
 	//if (Stalker)
 	//{
