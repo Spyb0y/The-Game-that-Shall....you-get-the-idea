@@ -28,7 +28,7 @@ void FontRasterizer::InitVB(ID3D11Device* device)
 
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_DYNAMIC;
-	vbd.ByteWidth = sizeof(Vertex::NormalTexVertex) * MAX_CHARS;
+	vbd.ByteWidth = sizeof(Vertex::NormalTexVertex) * MAX_CHARS * 4;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd.MiscFlags = 0;

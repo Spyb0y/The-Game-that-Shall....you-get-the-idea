@@ -80,6 +80,7 @@ void BattleState::Update(float dt)
 					}
 					selectItemState = false;
 					drawMenu = false;
+					drawArmour = false;
 					isLClicked = true;
 				}
 			}
@@ -99,12 +100,14 @@ void BattleState::Update(float dt)
 			{
 				if (!isLClicked)
 				{	
-					//test code
-					exit(-1);
-
 					selectItemState = false;
 					drawMenu = false;
+					drawArmour = false;
 					isLClicked = true;
+
+					Next = false;
+					mLastState->Init();
+					mStateMachine->SetCurrState(mLastState);
 				}
 			}
 			else
@@ -123,6 +126,7 @@ void BattleState::Update(float dt)
 				if (!isLClicked)
 				{
 					selectItemState = true;
+					drawArmour = false;
 					isLClicked = true;
 				}
 			}
@@ -135,6 +139,7 @@ void BattleState::Update(float dt)
 	if (selectItemState)
 	{
 		drawMenu = true;
+		//drawArmour = true;
 		int i = PlayerSelectItem();
 		if (i != -1)
 		{
@@ -181,16 +186,14 @@ void BattleState::SetInventory(Inventory* pInventory)
 	mInventory = pInventory;
 }
 
-//test code
-void BattleState::SetEnemy(Enemy* pEnemy)
-{
-	mEnemy = pEnemy;
-}
-
 Enemy* BattleState::SpawnEnemy()
 {
 	Sprite::Frame* mTile = ((StateMachine*)mStateMachine)->GetCurrTile();
 	int random;
+	if (mTile->Direction == 24)
+	{
+		SpawnBoss();
+	}
 	if (mTile->Terrain == 1)//forest
 	{
 		srand(time(NULL));
@@ -308,14 +311,14 @@ int BattleState::PlayerSelectItem()
 
 void BattleState::DrawArmourInventory(ID3D11DeviceContext* context)
 {
-	string sArmourDisplay = mHero->DisplayEquip().str();
+	string sArmourDisplay = mHero->DisplayArmourEquip().str();
 	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sArmourDisplay);
 }
 
 void BattleState::DrawItemMenu(ID3D11DeviceContext* context)
 {
-		string sItemsDisplay = mHero->DisplayItems().str();
-		mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sItemsDisplay);
+	string sItemsDisplay = mHero->DisplayItems().str();
+	mFont->DrawFont(context, XMVectorSet(10.0f, 300.0f, 0.0f, 0.0f), 25, 25, 43, sItemsDisplay);
 }
 
 void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect)
@@ -342,6 +345,11 @@ void BattleState::Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect*
 	if (drawMenu)
 	{
 		DrawItemMenu(context);
+	}
+
+	if (drawArmour)
+	{
+		DrawArmourInventory(context);
 	}
 
 	std::stringstream ssPlayerHealth;

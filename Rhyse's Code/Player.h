@@ -18,9 +18,7 @@ protected:
 	unsigned mMaxWeaponSlots;
 	unsigned mMaxHandSize;
 
-
 	void AddPlayerStats(Player* mHero, Equipment* newItem);
-	void DeletePlayerStats(Player* mHero, Equipment* newItem);
 		
 public:
 	std::vector<Equipment*> armourInventory;
@@ -42,15 +40,21 @@ public:
 	int GetPlayerEvade();
 	unsigned GetPlayerDefense();
 	int GetPlayerAttack();
+	unsigned GetMaxArmourSlots();
+	unsigned GetMaxWeaponSlots();
+	unsigned GetMaxAccessorySlots();
 
 	std::stringstream DisplayItems();
 	std::stringstream DisplayEquip();
+	std::stringstream DisplayArmourEquip();
+	std::stringstream DisplayWeaponEquip();
+	std::stringstream DisplayAccessoryEquip();
 
 	void GetEquipment(Player* mHero, Equipment* newItem);
 	void GetItem(Item* newItem);
 	void UseItem(int i, Player* mHero);
 	void ResetStats(int i, Player* mHero);
 	void DeleteItem(int i);
-
+	void DeletePlayerStats(Player* mHero, Equipment* newItem);
 };
 

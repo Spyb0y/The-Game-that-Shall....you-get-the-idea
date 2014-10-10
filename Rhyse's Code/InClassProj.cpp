@@ -87,7 +87,10 @@ InClassProj::InClassProj(HINSTANCE hInstance)
 	mBegin->SetNextState(mTilePlacement);
 	mTilePlacement->SetNextState(mPlayerTurn);
 	mPlayerTurn->SetNextState(mBattlePhase);
-	mBattlePhase->SetNextState(mTilePlacement);
+	mBattlePhase->SetNextState(mEnemyTurn);
+	mEnemyTurn->SetNextState(mTilePlacement);
+
+	mBattlePhase->SetLastState(mPlayerTurn);
 
 	mCurrState = mBegin;
 
@@ -1184,10 +1187,12 @@ bool InClassProj::Init()
 	mHero = new Player();
 	((BattleState*)mBattlePhase)->SetPlayer(mHero);
 	((PlayerTurnState*)mPlayerTurn)->SetPlayer(mHero);
+	((EnemyTurnState*)mEnemyTurn)->SetPlayer(mHero);
 
 	mInventory = new Inventory();
 	((BattleState*)mBattlePhase)->SetInventory(mInventory);
 	((PlayerTurnState*)mPlayerTurn)->SetInventory(mInventory);
+	((EnemyTurnState*)mEnemyTurn)->SetInventory(mInventory);
 
 	mInventory->createItemVectors();
 	mInventory->CreateEnemyVectors();

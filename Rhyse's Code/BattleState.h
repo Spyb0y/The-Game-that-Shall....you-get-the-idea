@@ -17,20 +17,19 @@ public:
 		Next = false;
 		isLClicked = false;
 		drawMenu = false;
+		drawArmour = false;
 		selectItemState = false;
 	}
 	virtual ~BattleState()
 	{
 		delete mNextState;
+		delete mLastState;
 	}
 	void Init();
 	void Update(float dt);
 	void Draw(CXMMATRIX vp, ID3D11DeviceContext* context, LitTexEffect* litTexEffect);
 	void SetPlayer(Player*);
 	void SetInventory(Inventory*);
-
-	//test code
-	void SetEnemy(Enemy*);
 
 private:
 	Player* mHero;
@@ -43,7 +42,6 @@ private:
 	bool Next;
 	bool isLClicked;
 
-	//test code
 	Enemy* mEnemy;
 
 	ID3D11DeviceContext* md3dImmediateContext;
@@ -64,6 +62,7 @@ private:
 	int PlayerSelectItem();
 
 	bool drawMenu;
+	bool drawArmour;
 	bool selectItemState;
 };
 
